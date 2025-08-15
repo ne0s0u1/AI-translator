@@ -124,7 +124,7 @@
 </div>
 
 <script>
-async function translate() {
+window.translate = async function () {
   const text = document.getElementById("sourceText").value.trim();
   const targetLang = document.getElementById("lang").value;
 
