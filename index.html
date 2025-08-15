@@ -69,7 +69,7 @@ async function translate() {
   document.getElementById("output").textContent = "翻译中...";
 
   try {
-    const res = await fetch("https://你的-worker-地址.workers.dev", {
+    const res = await fetch(" https://localize-proxy.ne0s0u1-pd.workers.dev", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ text, targetLang })
@@ -90,3 +90,4 @@ async function translate() {
 
 </body>
 </html>
+
