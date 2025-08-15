@@ -2,92 +2,94 @@
 <html lang="zh">
 <head>
 <meta charset="UTF-8">
-<title>🌏 多语言本土化翻译</title>
-<link rel="icon" href="data:,"> <!-- 防止 favicon.ico 404 -->
+<title>多语言本土化翻译</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <style>
   body {
     font-family: "Segoe UI", Arial, sans-serif;
-    background: linear-gradient(135deg, #f9f9f9, #ececec);
-    margin: 0;
-    padding: 20px;
+    background: #f0f2f5;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 30px;
     color: #333;
   }
-  h1 {
-    color: #222;
-    text-align: center;
-    margin-bottom: 20px;
-  }
   .container {
-    max-width: 700px;
-    margin: auto;
     background: #fff;
     border-radius: 12px;
-    padding: 20px;
-    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+    padding: 25px;
+    max-width: 600px;
+    width: 100%;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+  }
+  h1 {
+    text-align: center;
+    font-size: 1.8em;
+    margin-bottom: 20px;
+    color: #2b6cb0;
   }
   label {
     font-weight: bold;
-    margin-top: 15px;
     display: block;
+    margin-top: 15px;
+  }
+  input[disabled] {
+    background: #eee;
+    border: 1px solid #ccc;
+    padding: 8px;
+    border-radius: 6px;
+    width: 150px;
   }
   textarea {
     width: 100%;
-    height: 100px;
-    padding: 12px;
-    margin-top: 5px;
+    height: 120px;
+    padding: 10px;
+    border-radius: 6px;
     border: 1px solid #ccc;
-    border-radius: 8px;
+    margin-top: 5px;
     resize: vertical;
-    font-size: 15px;
+    font-size: 14px;
   }
   select, button {
     padding: 10px;
-    margin-top: 8px;
+    border-radius: 6px;
     border: 1px solid #ccc;
-    border-radius: 8px;
-    font-size: 15px;
+    font-size: 14px;
+    margin-top: 5px;
+    width: 100%;
   }
   button {
-    background: #4cafef;
+    background: #2b6cb0;
     color: white;
     border: none;
     cursor: pointer;
-    transition: background 0.3s;
+    font-weight: bold;
+    transition: background 0.2s;
   }
   button:hover {
-    background: #379dd8;
+    background: #1a4f80;
   }
   .output {
     margin-top: 20px;
     padding: 15px;
-    background: #f3f3f3;
-    border-radius: 8px;
-    font-size: 16px;
-    white-space: pre-wrap;
-    min-height: 50px;
-  }
-  .langs {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 10px;
-  }
-  .pill {
-    background: #e0e0e0;
-    padding: 5px 12px;
-    border-radius: 15px;
+    background: #f9f9f9;
+    border-radius: 6px;
+    border: 1px solid #ddd;
+    min-height: 80px;
+    white-space: pre-line;
     font-size: 14px;
   }
 </style>
 </head>
 <body>
 
-<h1>🌏 多语言本土化翻译</h1>
 <div class="container">
-  <label>源语言（固定为英文）：</label>
-  <input type="text" value="英语" disabled style="padding:8px; width:150px; background:#eee; border:1px solid #ccc; border-radius:8px;">
+  <h1>🌏 多语言本土化翻译</h1>
 
-  <label>输入要翻译的词汇（英文）：</label>
+  <label>源语言：</label>
+  <input type="text" value="英语" disabled>
+
+  <label>输入要翻译的词汇（英文，每行一个）：</label>
   <textarea id="sourceText" placeholder="在此输入英文词汇或短语"></textarea>
 
   <label>选择目标语言：</label>
@@ -104,27 +106,13 @@
     <option value="越南语">越南语</option>
   </select>
 
-  <button onclick="translate()">翻译</button>
-
-  <p>支持的语言：</p>
-  <div class="langs">
-    <span class="pill">英语</span>
-    <span class="pill">日语</span>
-    <span class="pill">韩语</span>
-    <span class="pill">德语</span>
-    <span class="pill">西班牙语</span>
-    <span class="pill">法语</span>
-    <span class="pill">葡萄牙语</span>
-    <span class="pill">简体中文</span>
-    <span class="pill">繁体中文</span>
-    <span class="pill">越南语</span>
-  </div>
+  <button id="translateBtn">翻译</button>
 
   <div class="output" id="output">翻译结果将在这里显示</div>
 </div>
 
 <script>
-window.translate = async function () {
+document.getElementById("translateBtn").addEventListener("click", async () => {
   const text = document.getElementById("sourceText").value.trim();
   const targetLang = document.getElementById("lang").value;
 
@@ -143,7 +131,6 @@ window.translate = async function () {
     });
 
     const data = await res.json();
-
     if (data.result) {
       document.getElementById("output").textContent = data.result;
     } else {
@@ -152,7 +139,7 @@ window.translate = async function () {
   } catch (err) {
     document.getElementById("output").textContent = "请求失败：" + err.message;
   }
-}
+});
 </script>
 
 </body>
