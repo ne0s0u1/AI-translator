@@ -2,99 +2,90 @@
 <html lang="zh">
 <head>
 <meta charset="UTF-8">
-<title>多语言本土化翻译</title>
+<title>🌏 多语言本土化翻译</title>
+<link rel="icon" href="data:,"> <!-- 防止 favicon.ico 404 -->
 <style>
   body {
-    font-family: 'Segoe UI', Arial, sans-serif;
-    background: linear-gradient(135deg, #f3f4f6, #e5e7eb);
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: linear-gradient(135deg, #f9f9f9, #ececec);
     margin: 0;
     padding: 20px;
     color: #333;
-    display: flex;
-    justify-content: center;
-  }
-  .container {
-    background: white;
-    border-radius: 16px;
-    padding: 25px;
-    max-width: 600px;
-    width: 100%;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.08);
   }
   h1 {
+    color: #222;
     text-align: center;
     margin-bottom: 20px;
-    font-weight: 600;
+  }
+  .container {
+    max-width: 700px;
+    margin: auto;
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 6px 16px rgba(0,0,0,0.08);
   }
   label {
-    font-weight: 500;
+    font-weight: bold;
     margin-top: 15px;
     display: block;
-    color: #555;
   }
-  input[type="text"], textarea, select {
+  textarea {
     width: 100%;
-    padding: 10px 12px;
+    height: 100px;
+    padding: 12px;
+    margin-top: 5px;
     border: 1px solid #ccc;
-    border-radius: 10px;
-    margin-top: 6px;
+    border-radius: 8px;
+    resize: vertical;
     font-size: 15px;
-    transition: border-color 0.2s, box-shadow 0.2s;
-    box-sizing: border-box;
   }
-  input:focus, textarea:focus, select:focus {
-    outline: none;
-    border-color: #6366f1;
-    box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+  select, button {
+    padding: 10px;
+    margin-top: 8px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 15px;
   }
   button {
-    background: linear-gradient(135deg, #6366f1, #4f46e5);
+    background: #4cafef;
     color: white;
     border: none;
-    padding: 10px 18px;
-    border-radius: 10px;
     cursor: pointer;
-    font-size: 16px;
-    margin-top: 18px;
-    transition: transform 0.1s ease-in-out, box-shadow 0.1s;
-    width: 100%;
+    transition: background 0.3s;
   }
   button:hover {
-    box-shadow: 0 4px 12px rgba(99,102,241,0.3);
-    transform: translateY(-1px);
-  }
-  .langs {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 10px;
-  }
-  .pill {
-    background: #f3f4f6;
-    padding: 5px 12px;
-    border-radius: 50px;
-    font-size: 13px;
-    border: 1px solid #e5e7eb;
+    background: #379dd8;
   }
   .output {
     margin-top: 20px;
     padding: 15px;
-    background: #f9fafb;
-    border: 1px solid #e5e7eb;
-    border-radius: 10px;
-    min-height: 50px;
+    background: #f3f3f3;
+    border-radius: 8px;
+    font-size: 16px;
     white-space: pre-wrap;
-    font-size: 15px;
+    min-height: 50px;
+  }
+  .langs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+  }
+  .pill {
+    background: #e0e0e0;
+    padding: 5px 12px;
+    border-radius: 15px;
+    font-size: 14px;
   }
 </style>
 </head>
 <body>
 
+<h1>🌏 多语言本土化翻译</h1>
 <div class="container">
-  <h1>🌏 多语言本土化翻译</h1>
-
-  <label>源语言（建议用英文作为源语言）：</label>
-  <input type="text" value="英语" disabled>
+  <label>源语言（固定为英文）：</label>
+  <input type="text" value="英语" disabled style="padding:8px; width:150px; background:#eee; border:1px solid #ccc; border-radius:8px;">
 
   <label>输入要翻译的词汇（英文）：</label>
   <textarea id="sourceText" placeholder="在此输入英文词汇或短语"></textarea>
@@ -113,7 +104,7 @@
     <option value="越南语">越南语</option>
   </select>
 
-  <button onclick="translate()">🚀 翻译</button>
+  <button onclick="translate()">翻译</button>
 
   <p>支持的语言：</p>
   <div class="langs">
@@ -133,7 +124,7 @@
 </div>
 
 <script>
-window.translate = async function () {
+async function translate() {
   const text = document.getElementById("sourceText").value.trim();
   const targetLang = document.getElementById("lang").value;
 
@@ -161,7 +152,7 @@ window.translate = async function () {
   } catch (err) {
     document.getElementById("output").textContent = "请求失败：" + err.message;
   }
-};
+}
 </script>
 
 </body>
