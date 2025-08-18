@@ -100,6 +100,12 @@
     <div class="muted" style="display:flex;align-items:center;"></div>
   </div>
 
+  <div style="margin:10px 0;">
+    <label for="batchSize">批大小：</label>
+    <input type="number" id="batchSize" value="50" min="1" max="500" style="width:60px;" />
+  </div>
+
+  
   <label>输入要翻译的词汇（英文，每行一个，如果显示未得到TSV，可能是超出API额度，减少行数再试一遍）：</label>
   <textarea id="sourceText" placeholder="示例：&#10;AI Stem Splitter&#10;Free Key and BPM Finder | Find Song Key &amp; BPM Online&#10;AUDIO-ZU-MIDI &lt;br&gt;&lt;/br&gt; Convert"></textarea>
 
@@ -402,4 +408,5 @@ el.dlBtn.addEventListener("click", ()=>{
 
 </body>
 </html>
+
 
