@@ -100,7 +100,7 @@
     <div class="muted" style="display:flex;align-items:center;"></div>
   </div>
 
-  <label>输入要翻译的词汇（英文，每行一个，一次不要超出50个，这星期会优化）：</label>
+  <label>输入要翻译的词汇（英文，每行一个，如果显示未得到TSV，可能是超出API额度，减少行数再试一遍）：</label>
   <textarea id="sourceText" placeholder="示例：&#10;AI Stem Splitter&#10;Free Key and BPM Finder | Find Song Key &amp; BPM Online&#10;AUDIO-ZU-MIDI &lt;br&gt;&lt;/br&gt; Convert"></textarea>
 
   <label>最佳本土化翻译示例（可选，多行）：</label>
@@ -149,6 +149,15 @@
 const API = "https://localize-proxy.ne0s0u1-pd.workers.dev";
 const EXPECT_HEADER = ["zh","ja","de","pt","es","fr","ko","tw","vi"];
 
+const sleep = (ms)=>new Promise(r=>setTimeout(r, ms));
+
+// 从批大小输入框取值（没有就默认 50）
+function getBatchSize(){
+  const elInput = document.getElementById("batchSize");
+  const v = elInput ? parseInt(elInput.value,10) : 50;
+  return Number.isFinite(v) && v > 0 ? v : 50;
+}
+  
 const el = {
   src: document.getElementById("sourceText"),
   status: document.getElementById("status"),
@@ -259,7 +268,8 @@ function renderTable(rows, inputLineCount){
 
 async function translateAndRender(){
   const input = el.src.value.trim();
-  const examples = document.getElementById("bestExamples").value.trim();
+  const examplesEl = document.getElementById("bestExamples");
+  const examples = examplesEl ? examplesEl.value.trim() : "";
   const inputLines = splitLines(el.src.value);
 
   if (!input){
@@ -267,30 +277,81 @@ async function translateAndRender(){
     return;
   }
 
+  const BATCH_SIZE = getBatchSize();
   el.status.className = "status";
-  el.status.textContent = "翻译中…";
+  el.status.textContent = "准备分批…";
   el.tableWrap.style.display = "none";
 
   try {
-    const res = await fetch(API, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ 
-        text: input,
-        examples,                     // 示例翻译
-        headerOrder: getHeaderOrder() // 关键：把拖拽后的表头顺序传给后端
-      })
-    });
-    const data = await res.json();
-    const tsv = (data && (data.table || data.result || "")) + "";
-    if (!tsv.trim()){
-      el.status.className = "status warn";
-      el.status.textContent = "⚠️ 未获得 TSV 内容。";
-      return;
+    const total = inputLines.length;
+    let offset = 0;
+    let firstBatch = true;
+    let combinedTSV = "";
+
+    const totalBatches = Math.ceil(total / BATCH_SIZE);
+
+    for (let batchIndex = 1; batchIndex <= totalBatches; batchIndex++) {
+      // 进度提示
+      el.status.textContent = `翻译中… 第 ${batchIndex} / ${totalBatches} 批（${BATCH_SIZE} 行/批）`;
+
+      const res = await fetch(API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          text: input,                     // 整体原文；后端用 offset/batchSize 切本批
+          examples,                        // 你的最佳本土化示例
+          headerOrder: getHeaderOrder(),   // 拖拽后的表头顺序
+          offset,                          // 本批起始行
+          batchSize: BATCH_SIZE            // 本批大小
+        })
+      });
+
+      if (!res.ok) {
+        const errText = await res.text().catch(()=> "");
+        throw new Error(`HTTP ${res.status}: ${errText || "请求失败"}`);
+      }
+
+      const data = await res.json();
+
+      // 429/限流容错：后端可能返回 retryAfterMs
+      if (data.error) {
+        if (data.retryAfterMs) {
+          const wait = Math.max(1200, data.retryAfterMs);
+          el.status.textContent = `触发限流，${Math.ceil(wait/1000)} 秒后继续…`;
+          await sleep(wait);
+          batchIndex--; // 重试当前批
+          continue;
+        }
+        throw new Error(data.error?.message || "后端错误");
+      }
+
+      // 首批包含表头；后续批只有数据行
+      const tsvPiece = (data.table || "").trim();
+      if (!tsvPiece) throw new Error("后端返回空的 TSV 片段");
+
+      if (firstBatch) {
+        combinedTSV = tsvPiece;
+        firstBatch = false;
+      } else {
+        combinedTSV += "\n" + tsvPiece;
+      }
+
+      // 推进 offset
+      const meta = data.meta || {};
+      if (!meta.hasMore) break;
+      offset = meta.nextOffset;
+
+      // 轻微节流，避免免费额度被限
+      await sleep(1200);
     }
-    const rows = parseTSV(tsv);
+
+    // 渲染整表
+    const rows = parseTSV(combinedTSV);
     renderTable(rows, inputLines.length);
-    el.tableWrap.dataset.tsv = tsv;
+    el.tableWrap.dataset.tsv = combinedTSV;
+
+    el.status.className = "status ok";
+    el.status.textContent = "✅ 翻译完成";
   } catch (e){
     el.status.className = "status warn";
     el.status.textContent = "请求失败：" + e.message;
