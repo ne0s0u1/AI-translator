@@ -271,10 +271,17 @@ function renderTable(rows, inputLineCount){
   }
 }
 
+// 获取批次大小，默认为 50
+function getBatchSize(){
+  const elInput = document.getElementById("batchSize");
+  const v = elInput ? parseInt(elInput.value,10) : 50;
+  return Number.isFinite(v) && v > 0 ? v : 50;
+}
+
 
 async function translateAndRender(){
   const input = el.src.value.trim();
-  const examplesEl = document.getElementById("bestExamples");
+  const examplesEl = document.getElementById("bestExamples"); // 获取“最佳本土化示例”的值
   const examples = examplesEl ? examplesEl.value.trim() : "";
   const inputLines = splitLines(el.src.value);
 
@@ -283,7 +290,7 @@ async function translateAndRender(){
     return;
   }
 
-  const BATCH_SIZE = getBatchSize();
+  const BATCH_SIZE = getBatchSize(); // 获取用户输入的批次大小
   el.status.className = "status";
   el.status.textContent = "准备分批…";
   el.tableWrap.style.display = "none";
@@ -304,7 +311,7 @@ async function translateAndRender(){
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          text: input,                     // 整体原文；后端用 offset/batchSize 切本批
+          text: input,                     // 整体原文，后端用 offset/batchSize 切本批
           examples,                        // 你的最佳本土化示例
           headerOrder: getHeaderOrder(),   // 拖拽后的表头顺序
           offset,                          // 本批起始行
@@ -313,7 +320,7 @@ async function translateAndRender(){
       });
 
       if (!res.ok) {
-        const errText = await res.text().catch(()=> "");
+        const errText = await res.text().catch(() => "");
         throw new Error(`HTTP ${res.status}: ${errText || "请求失败"}`);
       }
 
@@ -323,7 +330,7 @@ async function translateAndRender(){
       if (data.error) {
         if (data.retryAfterMs) {
           const wait = Math.max(1200, data.retryAfterMs);
-          el.status.textContent = `触发限流，${Math.ceil(wait/1000)} 秒后继续…`;
+          el.status.textContent = `触发限流，${Math.ceil(wait / 1000)} 秒后继续…`;
           await sleep(wait);
           batchIndex--; // 重试当前批
           continue;
@@ -331,7 +338,6 @@ async function translateAndRender(){
         throw new Error(data.error?.message || "后端错误");
       }
 
-      // 首批包含表头；后续批只有数据行
       const tsvPiece = (data.table || "").trim();
       if (!tsvPiece) throw new Error("后端返回空的 TSV 片段");
 
@@ -347,11 +353,9 @@ async function translateAndRender(){
       if (!meta.hasMore) break;
       offset = meta.nextOffset;
 
-      // 轻微节流，避免免费额度被限
-      await sleep(1200);
+      await sleep(1500); // 每次请求后加延时，避免频繁请求触发限流
     }
 
-    // 渲染整表
     const rows = parseTSV(combinedTSV);
     renderTable(rows, inputLines.length);
     el.tableWrap.dataset.tsv = combinedTSV;
@@ -363,6 +367,7 @@ async function translateAndRender(){
     el.status.textContent = "请求失败：" + e.message;
   }
 }
+
 
 
 
@@ -408,5 +413,6 @@ el.dlBtn.addEventListener("click", ()=>{
 
 </body>
 </html>
+
 
 
