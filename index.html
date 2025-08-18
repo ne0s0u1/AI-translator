@@ -92,7 +92,7 @@
 
 <div class="container">
   <h1>🌏 多语言本土化翻译</h1>
-  <div class="sub">输入多行英文（每行一个）返回 TSV</div>
+  <div class="sub">输入多行英文（每行一个），后端返回 TSV，前端渲染表格并自检。</div>
 
   <label>源语言（固定）：</label>
   <div class="row">
@@ -146,7 +146,7 @@
 <div class="toast" id="toast">已复制</div>
 
 <script>
-const API = "https://localize-proxy-staging.ne0s0u1-pd.workers.dev";
+const API = "https://localize-proxy.ne0s0u1-pd.workers.dev";
 const EXPECT_HEADER = ["zh","ja","de","pt","es","fr","ko","tw","vi"];
 
 const el = {
@@ -341,4 +341,3 @@ el.dlBtn.addEventListener("click", ()=>{
 
 </body>
 </html>
-
