@@ -105,6 +105,13 @@
     <input type="number" id="batchSize" value="50" min="1" max="500" style="width:60px;" />
   </div>
 
+  <div style="margin:10px 0;">
+    <label for="userApiKey">（可选）你的 API Key：</label>
+    <input type="password" id="userApiKey" placeholder="sk-..." style="width:340px;">
+    <div class="hint" style="font-size:12px;color:#666;">
+      填写后会用你的 Key 走 APICore，不填则用站点后端的 Key。仅存储在本地浏览器。
+    </div>
+  </div>
   
   <label>输入要翻译的词汇（英文，每行一个，如果显示未得到TSV，可能是超出API额度，减少行数再试一遍）：</label>
   <textarea id="sourceText" placeholder="示例：&#10;AI Stem Splitter&#10;Free Key and BPM Finder | Find Song Key &amp; BPM Online&#10;AUDIO-ZU-MIDI &lt;br&gt;&lt;/br&gt; Convert"></textarea>
@@ -152,7 +159,7 @@
 <div class="toast" id="toast">已复制</div>
 
 <script>
-const API = "https://localize-proxy.ne0s0u1-pd.workers.dev";
+const API = "https://localize-proxy-staging.ne0s0u1-pd.workers.dev";
 const EXPECT_HEADER = ["zh","ja","de","pt","es","fr","ko","tw","vi"];
 
 const sleep = (ms)=>new Promise(r=>setTimeout(r, ms));
@@ -176,6 +183,14 @@ const el = {
   dlBtn: document.getElementById("dlBtn"),
   toast: document.getElementById("toast"),
 };
+
+const _userKeyInput = document.getElementById("userApiKey");
+if (_userKeyInput) {
+  _userKeyInput.value = localStorage.getItem("apicore_user_key") || "";
+  _userKeyInput.addEventListener("input", () => {
+    localStorage.setItem("apicore_user_key", _userKeyInput.value);
+  });
+}
 
 // 拖拽逻辑
 const list = document.getElementById('headerList');
@@ -307,15 +322,17 @@ async function translateAndRender(){
       // 进度提示
       el.status.textContent = `翻译中… 第 ${batchIndex} / ${totalBatches} 批（${BATCH_SIZE} 行/批）`;
 
+      const batchText = inputLines.slice(offset, offset + BATCH_SIZE).join("\n");
       const res = await fetch(API, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          text: input,                     // 整体原文，后端用 offset/batchSize 切本批
+          text: batchText,                     // 整体原文，后端用 offset/batchSize 切本批
           examples,                        // 你的最佳本土化示例
           headerOrder: getHeaderOrder(),   // 拖拽后的表头顺序
           offset,                          // 本批起始行
-          batchSize: BATCH_SIZE            // 本批大小
+          batchSize: BATCH_SIZE,           // 本批大小
+          userApiKey: (document.getElementById("userApiKey")?.value || "").trim() // 新增：用户自己的 Key
         })
       });
 
@@ -395,10 +412,13 @@ async function robustCopy(text) {
 el.runBtn.addEventListener("click", translateAndRender);
 el.copyBtn.addEventListener("click", async ()=>{
   const tsv = el.tableWrap.dataset.tsv || "";
-  if (!tsv.trim()){ showToast("没有可复制的 TSV"); return; }
-  try{ await robustCopy(tsv); showToast("已复制 TSV"); }
+  const lines = tsv.split(/\r?\n/);
+  const noHeader = lines.length > 1 ? lines.slice(1).join("\n") : "";
+  if (!noHeader.trim()){ showToast("没有可复制的 TSV"); return; }
+  try{ await robustCopy(noHeader); showToast("已复制 TSV（不含表头）"); }
   catch(e){ showToast("复制失败"); }
 });
+
 el.dlBtn.addEventListener("click", ()=>{
   const tsv = el.tableWrap.dataset.tsv || "";
   if (!tsv.trim()){ showToast("没有可下载的 TSV"); return; }
@@ -413,7 +433,6 @@ el.dlBtn.addEventListener("click", ()=>{
 
 </body>
 </html>
-
 
 
 
