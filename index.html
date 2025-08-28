@@ -101,14 +101,15 @@
   </div>
 
   <div style="margin:10px 0;">
-    <label for="batchSize">批大小(100-200)：</label>
-    <input type="number" id="batchSize" value="200" min="1" max="500" style="width:60px;" />
+    <label for="batchSize">批大小(行数/3或4 数据量超过500最好不要分批)：</label>
+    <input type="number" id="batchSize" value="50" min="1" max="500" style="width:60px;" />
   </div>
 
   <div style="margin:10px 0;">
-    <label for="userApiKey">API Key：</label>
+    <label for="userApiKey">（可选）你的 API Key：</label>
     <input type="password" id="userApiKey" placeholder="sk-..." style="width:340px;">
     <div class="hint" style="font-size:12px;color:#666;">
+      填写后会用你的 Key 走 APICore，不填则用站点后端的 Key。仅存储在本地浏览器。
     </div>
   </div>
   
@@ -321,12 +322,11 @@ async function translateAndRender(){
       // 进度提示
       el.status.textContent = `翻译中… 第 ${batchIndex} / ${totalBatches} 批（${BATCH_SIZE} 行/批）`;
 
-      const batchText = inputLines.slice(offset, offset + BATCH_SIZE).join("\n");
       const res = await fetch(API, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          text: batchText,                     // 整体原文，后端用 offset/batchSize 切本批
+          text: inputLines.join("\n"),                     // 整体原文，后端用 offset/batchSize 切本批
           examples,                        // 你的最佳本土化示例
           headerOrder: getHeaderOrder(),   // 拖拽后的表头顺序
           offset,                          // 本批起始行
@@ -357,15 +357,18 @@ async function translateAndRender(){
       const tsvPiece = (data.table || "").trim();
       if (!tsvPiece) throw new Error("后端返回空的 TSV 片段");
 
-      if (firstBatch) {
-        combinedTSV = tsvPiece;
-        firstBatch = false;
+      const lines = tsvPiece.split(/\r?\n/);
+      const isFirst = data.meta?.isFirstBatch;
+
+      if (isFirst) {
+        combinedTSV = tsvPiece; // 首批含表头
       } else {
-        combinedTSV += "\n" + tsvPiece;
+        combinedTSV += "\n" + tsvPiece; // 后续批次直接拼接（后端已去表头）
       }
 
       // 推进 offset
       const meta = data.meta || {};
+      console.log("Batch", batchIndex, "offset:", offset, "hasMore:", meta.hasMore);
       if (!meta.hasMore) break;
       offset = meta.nextOffset;
 
@@ -373,8 +376,12 @@ async function translateAndRender(){
     }
 
     const rows = parseTSV(combinedTSV);
-    renderTable(rows, inputLines.length);
-    el.tableWrap.dataset.tsv = combinedTSV;
+    const truncatedRows = [rows[0], ...rows.slice(1, inputLines.length + 1)];
+    renderTable(truncatedRows, inputLines.length);
+
+    // 保存：用于复制/下载时用的是干净版本
+    el.tableWrap.dataset.tsv = truncatedRows.map(r => r.join("\t")).join("\n");
+
 
     el.status.className = "status ok";
     el.status.textContent = "✅ 翻译完成";
@@ -432,10 +439,6 @@ el.dlBtn.addEventListener("click", ()=>{
 
 </body>
 </html>
-
-
-
-
 
 
 
