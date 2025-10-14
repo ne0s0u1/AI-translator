@@ -94,26 +94,23 @@
   <h1>🌏 多语言本土化翻译</h1>
   <div class="sub">输入多行英文（每行一个），后端返回 TSV，前端渲染表格并自检。</div>
 
-  <label>源语言（固定）：</label>
+  <label>源语言：</label>
   <div class="row">
     <input type="text" value="英语" disabled style="background:#f3f4f6;border:1px solid #d1d5db;border-radius:10px;padding:10px;">
     <div class="muted" style="display:flex;align-items:center;"></div>
   </div>
 
   <div style="margin:10px 0;">
-    <label for="batchSize">批大小(行数/3或4 数据量超过500最好不要分批)：</label>
+    <label for="batchSize">批大小(数据量超过500行最好不要分批)：</label>
     <input type="number" id="batchSize" value="50" min="1" max="500" style="width:60px;" />
   </div>
 
   <div style="margin:10px 0;">
-    <label for="userApiKey">（可选）你的 API Key：</label>
+    <label for="userApiKey">API Key：</label>
     <input type="password" id="userApiKey" placeholder="sk-..." style="width:340px;">
-    <div class="hint" style="font-size:12px;color:#666;">
-      填写后会用你的 Key 走 APICore，不填则用站点后端的 Key。仅存储在本地浏览器。
-    </div>
   </div>
   
-  <label>输入要翻译的词汇（英文，每行一个，如果显示未得到TSV，可能是超出API额度，减少行数再试一遍）：</label>
+  <label>输入要翻译的词汇（每行一个）：</label>
   <textarea id="sourceText" placeholder="示例：&#10;AI Stem Splitter&#10;Free Key and BPM Finder | Find Song Key &amp; BPM Online&#10;AUDIO-ZU-MIDI &lt;br&gt;&lt;/br&gt; Convert"></textarea>
 
   <label>最佳本土化翻译示例（可选，多行）：</label>
@@ -439,6 +436,7 @@ el.dlBtn.addEventListener("click", ()=>{
 
 </body>
 </html>
+
 
 
 
