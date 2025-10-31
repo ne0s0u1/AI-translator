@@ -265,8 +265,11 @@
   <div class="hint">这些示例会作为参考拼接到 AI 提示中，帮助生成更符合你要求的翻译。</div>
 
   <label>自定义提示词（可选）：</label>
-  <input type="text" id="customPrompt" placeholder="例如：请保持专业语气，优先使用短句" style="width:100%;border:1px solid #d1d5db;border-radius:10px;padding:10px;margin-top:4px;">
-  <div class="hint">该提示词会附加到每次翻译的系统指令中，用于控制翻译风格或语气。</div>
+  <textarea id="customPrompt" placeholder="例如：请保持专业语气，优先使用短句"
+    style="width:100%;min-height:80px;padding:12px;border:1px solid #d1d5db;
+           border-radius:10px;resize:vertical;font-size:14px;"></textarea>
+  <div class="hint">该提示词将附加在系统提示前，控制翻译风格或语气。</div>
+
 
   
   <div class="header-drag-container">
@@ -484,4 +487,5 @@ el.dlBtn.addEventListener("click",()=>{
 
 </body>
 </html>
+
 
