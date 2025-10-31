@@ -259,10 +259,19 @@
   <div class="hint">这些示例会作为参考拼接到 AI 提示中，帮助生成更符合你要求的翻译。</div>
 
   <label>自定义提示词（可选）：</label>
+  <div style="display:flex;gap:10px;align-items:center;margin-bottom:6px;">
+    <select id="presetPrompt" style="padding:10px;border-radius:10px;border:1px solid #d1d5db;">
+      <option value="">选择预设类型（可选）</option>
+      <option value="music">音乐站</option>
+      <option value="coloring">填色页</option>
+    </select>
+  </div>
+
   <textarea id="customPrompt" placeholder="例如：请保持专业语气，优先使用短句"
     style="width:100%;min-height:80px;padding:12px;border:1px solid #d1d5db;
            border-radius:10px;resize:vertical;font-size:14px;"></textarea>
-  <div class="hint">该提示词将附加在系统提示前，控制翻译风格或语气。</div>
+  <div class="hint">你可以选择预设类型或手动输入提示词；该提示将附加在系统提示前，用于控制翻译风格。</div>
+
 
 
   
@@ -477,10 +486,81 @@ el.dlBtn.addEventListener("click",()=>{
   const url=URL.createObjectURL(blob);const a=document.createElement("a");
   a.href=url;a.download="translations.tsv";a.click();URL.revokeObjectURL(url);
 });
+  // ✅ 自定义提示词预设逻辑
+const presetSelect = document.getElementById("presetPrompt");
+const customPromptArea = document.getElementById("customPrompt");
+
+if (presetSelect && customPromptArea) {
+  const presets = {
+    music: `此次任务是进行AI音乐SAAS服务的文案翻译，需要将与 AI 音乐创作、混音、母带、歌词或音频工具相关的文本翻译为目标语言，使其自然、本地化、符合音乐行业术语及 SEO 表达，适用于全球音乐生成平台、音频工具网站和多语言产品页面。
+
+规则：
+- 保留原文格式与排版，不增删内容。
+- 保留所有技术词汇（如 stem separation、mastering、reverb、BPM、MIDI、AI vocal remover 等）。
+- 翻译需兼顾音乐制作、AI 创作与音频工程领域的专业准确性。
+- 专有名词、产品名或品牌名保持原文（如 MusicCreator AI、Suno、OpenMusic）。
+- 缺少合适译词时可保留英文原文，但需符合目标语言语序。
+- 语言风格：
+- 专业、自然、面向创作者、制作人、艺术家及普通用户。
+- 用词应清晰、简洁，避免过度营销或机械直译。
+- 在描述功能或流程时，应采用音乐人常用表达方式。
+- 若涉及 SEO 描述，优先使用行业中搜索量较高的自然说法。
+
+翻译流程：
+① 直译（Literal Translation）：逐字逐句翻译，保留结构、技术词与排版。
+② 评估与反思（Evaluation and Reflection）：指出直译中的不自然之处、行业术语使用问题、语气偏差。
+③ 本地化译文（Free Translation）：根据评估优化为自然、流畅、具行业语感的翻译，保持技术与语义准确。
+
+说明：
+- 保留所有音频参数、符号、占位符及 HTML 标签。
+- 翻译音乐功能术语时遵循专业标准，如 EQ、DAW、compressor、vocal、drum loop、BPM 等。
+- 若出现流派或风格词汇（如 lofi、phonk、EDM、jazz），保持原文拼写。
+- 保留音乐品牌与产品名，不进行翻译或改写。
+- 语气应符合音乐平台风格：创意、自由、鼓励表达、兼具专业度。`,
+    coloring: `你是一名多语言本地化专家。任务是将与填色页相关的提示词、描述或儿童友好型图像说明翻译为目标语言，使其自然、本地化、具视觉描述性，适用于全球填色页网站、图像生成模型及多语言商品页面。
+
+规则：
+
+保留原文的格式与排版，不增删内容。
+保留所有技术词汇（如 outline only、ratio 2:3、no shadow、black and white 等）。
+原始的视觉结构说明必须完整保留。
+人物、角色或 IP 名称使用各语言中最常用、官方或广为人知的名称，避免直译或音译。
+当目标语言中缺少对应术语时，可保留英文原文。
+
+语言风格：
+温和、有想象力、具视觉感。
+面向儿童、家长或创作者。
+若为 AI 图像提示，应简洁、清晰。
+避免生硬直译或机械表达。
+
+翻译流程：
+① 直译（Literal Translation）：逐字逐句翻译，保留结构、技术词、排版。
+② 评估与反思（Evaluation and Reflection）：简要说明直译中的问题，包括不自然表达、视觉语义是否准确、技术描述是否清晰。
+③ 本地化译文（Free Translation）：基于反思重新翻译，使语气自然、生动、文化契合，同时保持视觉与技术准确性。
+
+说明：
+
+保留角色名、文化名词、图像特征。
+若文本描述场景，应具画面感与故事性。
+对于知名角色（如 Spiderman、Elsa、Hello Kitty），使用当地常用或官方名称。
+若不确定，采用该语言中搜索量最高的版本，不可随意音译。`
+  };
+
+  presetSelect.addEventListener("change", () => {
+    const v = presetSelect.value;
+    if (v && presets[v]) {
+      customPromptArea.value = presets[v];
+    } else {
+      customPromptArea.value = "";
+    }
+  });
+}
+
 </script>
 
 </body>
 </html>
+
 
 
 
