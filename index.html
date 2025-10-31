@@ -21,36 +21,33 @@
     font-family:'Inter',sans-serif;
     background:var(--bg);
     margin:0;
-    padding:32px;
+    padding:40px 24px 80px;
     color:var(--text);
     display:flex;
     justify-content:center;
-    align-items:flex-start;
   }
   .container{
     background:var(--card);
     border-radius:16px;
-    padding:24px 28px;
+    padding:28px;
     width:100%;
-    max-width:1080px;
+    max-width:980px;
     box-shadow:0 8px 24px rgba(0,0,0,.05);
-    display:grid;
-    grid-template-columns:1fr 1.1fr;
-    gap:24px;
+    display:flex;
+    flex-direction:column;
+    gap:18px;
   }
   h1{
-    grid-column:1 / -1;
-    margin:0 0 8px;
     text-align:center;
     color:var(--brand);
     font-size:1.9rem;
     font-weight:700;
+    margin:0;
   }
   .sub{
-    grid-column:1 / -1;
     text-align:center;
     color:#555;
-    margin-bottom:18px;
+    margin-bottom:14px;
   }
   label{
     font-weight:600;
@@ -136,15 +133,16 @@
 
   .right-tools{ display:flex; gap:10px; justify-content:flex-end; }
 
-  /* 结果卡片与表格 */
-  .card{
+  /* 表格区 */
+  .result-section{
+    margin-top:24px;
     background:#fff;
-    border:1px solid var(--border);
     border-radius:12px;
-    padding:16px;
-    box-shadow:0 2px 8px rgba(0,0,0,0.04);
+    border:1px solid var(--border);
+    padding:20px;
+    box-shadow:0 2px 10px rgba(0,0,0,0.04);
   }
-  .card h2{
+  .result-section h2{
     margin:0 0 12px;
     font-size:1.05rem;
     color:#333;
@@ -152,7 +150,7 @@
     align-items:center;
     gap:8px;
   }
-  .card h2::before{ content:"📋"; }
+  .result-section h2::before{ content:"📋"; }
 
   .table-wrap{
     margin-top:10px;
@@ -243,69 +241,64 @@
   <h1>🌏 多语言本土化翻译</h1>
   <div class="sub">输入多行英文（每行一个），后端返回 TSV，前端渲染表格并自检。</div>
 
-  <!-- 左侧输入配置 -->
-  <div class="left-panel">
-    <label>源语言：</label>
-    <div class="row">
-      <input type="text" value="英语" disabled style="background:#f3f4f6;border:1px solid #d1d5db;border-radius:10px;padding:10px;">
-      <div class="muted" style="display:flex;align-items:center;"></div>
-    </div>
+  <label>源语言：</label>
+  <div class="row">
+    <input type="text" value="英语" disabled style="background:#f3f4f6;border:1px solid #d1d5db;border-radius:10px;padding:10px;">
+    <div class="muted" style="display:flex;align-items:center;"></div>
+  </div>
 
-    <div style="margin:10px 0;">
-      <label for="batchSize">批大小(数据量超过500行最好不要分批)：</label>
-      <input type="number" id="batchSize" value="50" min="1" max="500" style="width:80px;">
-    </div>
+  <div style="margin:10px 0;">
+    <label for="batchSize">批大小(数据量超过500行最好不要分批)：</label>
+    <input type="number" id="batchSize" value="50" min="1" max="500" style="width:80px;">
+  </div>
 
-    <div style="margin:10px 0;">
-      <label for="userApiKey">API Key：</label>
-      <input type="password" id="userApiKey" placeholder="sk-..." style="width:340px;">
-    </div>
-    
-    <label>输入要翻译的词汇（每行一个）：</label>
-    <textarea id="sourceText" placeholder="示例：&#10;AI Stem Splitter&#10;Free Key and BPM Finder | Find Song Key &amp; BPM Online&#10;AUDIO-ZU-MIDI &lt;br&gt;&lt;/br&gt; Convert"></textarea>
+  <div style="margin:10px 0;">
+    <label for="userApiKey">API Key：</label>
+    <input type="password" id="userApiKey" placeholder="sk-..." style="width:340px;">
+  </div>
+  
+  <label>输入要翻译的词汇（每行一个）：</label>
+  <textarea id="sourceText" placeholder="示例：&#10;AI Stem Splitter&#10;Free Key and BPM Finder | Find Song Key &amp; BPM Online&#10;AUDIO-ZU-MIDI &lt;br&gt;&lt;/br&gt; Convert"></textarea>
 
-    <label>最佳本土化翻译示例（可选，多行）：</label>
-    <textarea id="bestExamples" placeholder="示例格式：&#10;AI Stem Splitter => AI 音轨分离器&#10;Free Key and BPM Finder => 免费调性与BPM检测工具"></textarea>
-    <div class="hint">这些示例会作为参考拼接到 AI 提示中，帮助生成更符合你要求的翻译。</div>
+  <label>最佳本土化翻译示例（可选，多行）：</label>
+  <textarea id="bestExamples" placeholder="示例格式：&#10;AI Stem Splitter => AI 音轨分离器&#10;Free Key and BPM Finder => 免费调性与BPM检测工具"></textarea>
+  <div class="hint">这些示例会作为参考拼接到 AI 提示中，帮助生成更符合你要求的翻译。</div>
 
-    <!-- 拖拽表头顺序 -->
-    <div class="header-drag-container">
-      <label>拖动调整语言顺序：</label>
-      <ul id="headerList" class="header-drag-list">
-        <li draggable="true" data-code="zh">zh</li>
-        <li draggable="true" data-code="ja">ja</li>
-        <li draggable="true" data-code="de">de</li>
-        <li draggable="true" data-code="pt">pt</li>
-        <li draggable="true" data-code="es">es</li>
-        <li draggable="true" data-code="fr">fr</li>
-        <li draggable="true" data-code="ko">ko</li>
-        <li draggable="true" data-code="tw">tw</li>
-        <li draggable="true" data-code="vi">vi</li>
-      </ul>
-    </div>
+  <div class="header-drag-container">
+    <label>拖动调整语言顺序：</label>
+    <ul id="headerList" class="header-drag-list">
+      <li draggable="true" data-code="zh">zh</li>
+      <li draggable="true" data-code="ja">ja</li>
+      <li draggable="true" data-code="de">de</li>
+      <li draggable="true" data-code="pt">pt</li>
+      <li draggable="true" data-code="es">es</li>
+      <li draggable="true" data-code="fr">fr</li>
+      <li draggable="true" data-code="ko">ko</li>
+      <li draggable="true" data-code="tw">tw</li>
+      <li draggable="true" data-code="vi">vi</li>
+    </ul>
+  </div>
 
-    <div class="actions">
-      <button id="runBtn" class="btn">🚀 翻译并生成表格</button>
-      <div class="right-tools" style="margin-left:auto;">
-        <button id="copyBtn" class="btn btn-ok">📋 复制 TSV</button>
-        <button id="dlBtn" class="btn btn-ghost">⬇️ 下载 TSV</button>
-      </div>
+  <div class="actions">
+    <button id="runBtn" class="btn">🚀 翻译并生成表格</button>
+    <div class="right-tools" style="margin-left:auto;">
+      <button id="copyBtn" class="btn btn-ok">📋 复制 TSV</button>
+      <button id="dlBtn" class="btn btn-ghost">⬇️ 下载 TSV</button>
     </div>
   </div>
 
-  <!-- 右侧结果展示 -->
-  <div class="right-panel">
-    <div class="card">
-      <h2>翻译结果</h2>
-      <div id="status" class="status muted">待翻译</div>
-      <div class="table-wrap" id="tableWrap" style="display:none;">
-        <table id="resultTable">
-          <thead><tr></tr></thead>
-          <tbody></tbody>
-        </table>
-      </div>
-      <div class="hint">注：表格中空白单元格会标红，表示可能漏译；HTML 标签与占位符原样保留。</div>
+  <div id="status" class="status muted">待翻译</div>
+
+  <!-- 表格区独立在页面最下方 -->
+  <div class="result-section">
+    <h2>翻译结果</h2>
+    <div class="table-wrap" id="tableWrap" style="display:none;">
+      <table id="resultTable">
+        <thead><tr></tr></thead>
+        <tbody></tbody>
+      </table>
     </div>
+    <div class="hint">注：表格中空白单元格会标红，表示可能漏译；HTML 标签与占位符原样保留。</div>
   </div>
 </div>
 
@@ -316,7 +309,6 @@ const API = "https://localize-proxy.ne0s0u1-pd.workers.dev";
 const EXPECT_HEADER = ["zh","ja","de","pt","es","fr","ko","tw","vi"];
 const sleep = (ms)=>new Promise(r=>setTimeout(r, ms));
 
-// 从批大小输入框取值（没有就默认 50）
 function getBatchSize(){
   const elInput = document.getElementById("batchSize");
   const v = elInput ? parseInt(elInput.value,10) : 50;
@@ -344,7 +336,6 @@ if (_userKeyInput) {
   });
 }
 
-// 拖拽逻辑
 const list = document.getElementById('headerList');
 let dragItem = null;
 list.addEventListener('dragstart', e => {
@@ -385,8 +376,7 @@ function splitLines(s){
 function parseTSV(tsv){
   tsv = tsv.replace(/^```[\s\S]*?\n/,"").replace(/```$/,"").trim();
   const lines = tsv.split(/\r?\n/);
-  const rows = lines.map(line => line.split("\t"));
-  return rows;
+  return lines.map(line => line.split("\t"));
 }
 
 function renderTable(rows, inputLineCount){
@@ -400,20 +390,16 @@ function renderTable(rows, inputLineCount){
 
   el.tbody.innerHTML = "";
   const dataRows = rows.slice(1);
-  const missingCells = { count: 0 };
-
-  dataRows.forEach((cols) => {
+  let missingCount = 0;
+  dataRows.forEach(cols => {
     const tr = document.createElement("tr");
-    for (let i = 0; i < header.length; i++) {
+    header.forEach((_, i) => {
       const td = document.createElement("td");
-      const raw = (cols[i] ?? "").trim();
-      if (!raw) {
-        td.classList.add("missing");
-        missingCells.count++;
-      }
-      td.innerHTML = sanitizeKeepBr(raw);
+      const val = (cols[i] ?? "").trim();
+      if (!val) { td.classList.add("missing"); missingCount++; }
+      td.innerHTML = sanitizeKeepBr(val);
       tr.appendChild(td);
-    }
+    });
     el.tbody.appendChild(tr);
   });
 
@@ -421,10 +407,10 @@ function renderTable(rows, inputLineCount){
   const outLines = dataRows.length;
   if (outLines !== inputLineCount) {
     el.status.className = "status warn";
-    el.status.textContent = `⚠️ 行数不一致：输入 ${inputLineCount} 行，输出 ${outLines} 行；空单元格 ${missingCells.count} 个。`;
-  } else if (missingCells.count > 0) {
+    el.status.textContent = `⚠️ 行数不一致：输入 ${inputLineCount} 行，输出 ${outLines} 行；空单元格 ${missingCount} 个。`;
+  } else if (missingCount > 0) {
     el.status.className = "status warn";
-    el.status.textContent = `⚠️ 检测到 ${missingCells.count} 个空单元格（可能漏译）。`;
+    el.status.textContent = `⚠️ 检测到 ${missingCount} 个空单元格（可能漏译）。`;
   } else {
     el.status.className = "status ok";
     el.status.textContent = "✅ 翻译完成，行数匹配，无空单元格。";
@@ -433,122 +419,60 @@ function renderTable(rows, inputLineCount){
 
 async function translateAndRender(){
   const input = el.src.value.trim();
-  const examplesEl = document.getElementById("bestExamples");
-  const examples = examplesEl ? examplesEl.value.trim() : "";
-  const inputLines = splitLines(el.src.value);
-  if (!input){
-    alert("请输入英文（每行一个短语/句子）");
-    return;
-  }
+  const examples = document.getElementById("bestExamples").value.trim();
+  const inputLines = splitLines(input);
+  if (!input){ alert("请输入英文文本"); return; }
 
   const BATCH_SIZE = getBatchSize();
-  el.status.className = "status";
-  el.status.textContent = "准备分批…";
-  el.tableWrap.style.display = "none";
-  el.runBtn.disabled = true;
+  el.status.className = "status"; el.status.textContent = "准备分批…";
+  el.tableWrap.style.display = "none"; el.runBtn.disabled = true;
 
   try {
-    const total = inputLines.length;
-    let offset = 0;
-    let combinedTSV = "";
+    const total = inputLines.length; let offset = 0; let combinedTSV = "";
     const totalBatches = Math.ceil(total / BATCH_SIZE);
-
-    for (let batchIndex = 1; batchIndex <= totalBatches; batchIndex++) {
-      el.status.textContent = `翻译中… 第 ${batchIndex} / ${totalBatches} 批（${BATCH_SIZE} 行/批）`;
-
-      const res = await fetch(API, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          text: inputLines.join("\n"),
-          examples,
-          headerOrder: getHeaderOrder(),
-          offset,
-          batchSize: BATCH_SIZE,
-          userApiKey: (document.getElementById("userApiKey")?.value || "").trim()
+    for (let i=1;i<=totalBatches;i++){
+      el.status.textContent = `翻译中… 第 ${i}/${totalBatches} 批`;
+      const res = await fetch(API,{
+        method:"POST",headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({
+          text:inputLines.join("\n"),examples,
+          headerOrder:getHeaderOrder(),offset,batchSize:BATCH_SIZE,
+          userApiKey:(document.getElementById("userApiKey")?.value||"").trim()
         })
       });
-
-      if (!res.ok) {
-        const errText = await res.text().catch(() => "");
-        throw new Error(`HTTP ${res.status}: ${errText || "请求失败"}`);
-      }
-
-      const data = await res.json();
-      if (data.error) {
-        if (data.retryAfterMs) {
-          const wait = Math.max(1200, data.retryAfterMs);
-          el.status.textContent = `触发限流，${Math.ceil(wait / 1000)} 秒后继续…`;
-          await sleep(wait);
-          batchIndex--;
-          continue;
-        }
-        throw new Error(data.error?.message || "后端错误");
-      }
-
-      const tsvPiece = (data.table || "").trim();
-      if (!tsvPiece) throw new Error("后端返回空的 TSV 片段");
-
-      if (data.meta?.isFirstBatch) combinedTSV = tsvPiece;
-      else combinedTSV += "\n" + tsvPiece;
-
-      const meta = data.meta || {};
-      if (!meta.hasMore) break;
-      offset = meta.nextOffset;
-      await sleep(1500);
+      if(!res.ok) throw new Error("请求失败");
+      const data=await res.json();
+      if(data.error){throw new Error(data.error.message||"后端错误");}
+      combinedTSV += (combinedTSV?"\n":"")+(data.table||"").trim();
+      offset += BATCH_SIZE; await sleep(1500);
     }
-
-    const rows = parseTSV(combinedTSV);
-    const truncatedRows = [rows[0], ...rows.slice(1, inputLines.length + 1)];
-    renderTable(truncatedRows, inputLines.length);
-    el.tableWrap.dataset.tsv = truncatedRows.map(r => r.join("\t")).join("\n");
-  } catch (e){
-    el.status.className = "status warn";
-    el.status.textContent = "请求失败：" + e.message;
-  } finally {
-    el.runBtn.disabled = false;
-  }
+    const rows=parseTSV(combinedTSV);
+    renderTable(rows,inputLines.length);
+    el.tableWrap.dataset.tsv=rows.map(r=>r.join("\t")).join("\n");
+  }catch(e){
+    el.status.className="status warn";el.status.textContent="请求失败："+e.message;
+  }finally{el.runBtn.disabled=false;}
 }
 
-async function robustCopy(text) {
-  if (!window.isSecureContext) throw new Error("非 HTTPS 安全环境，无法写入剪贴板");
-  if (navigator.clipboard && navigator.clipboard.writeText){
-    try {
-      if (navigator.permissions && navigator.permissions.query){
-        await navigator.permissions.query({ name: "clipboard-write" });
-      }
-    } catch(_) {}
-    await navigator.clipboard.writeText(text);
-    return;
-  }
-  const ta = document.createElement("textarea");
-  ta.value = text; ta.setAttribute("readonly","");
-  ta.style.position="absolute"; ta.style.left="-9999px";
-  document.body.appendChild(ta);
-  ta.select(); ta.setSelectionRange(0, ta.value.length);
-  const ok = document.execCommand("copy");
-  document.body.removeChild(ta);
-  if (!ok) throw new Error("复制失败");
+async function robustCopy(text){
+  if(navigator.clipboard&&navigator.clipboard.writeText){await navigator.clipboard.writeText(text);return;}
+  const ta=document.createElement("textarea");
+  ta.value=text;ta.style.position="absolute";ta.style.left="-9999px";document.body.appendChild(ta);
+  ta.select();document.execCommand("copy");document.body.removeChild(ta);
 }
 
-el.runBtn.addEventListener("click", translateAndRender);
-el.copyBtn.addEventListener("click", async ()=>{
-  const tsv = el.tableWrap.dataset.tsv || "";
-  const lines = tsv.split(/\r?\n/);
-  const noHeader = lines.length > 1 ? lines.slice(1).join("\n") : "";
-  if (!noHeader.trim()){ showToast("没有可复制的 TSV"); return; }
-  try{ await robustCopy(noHeader); showToast("已复制 TSV（不含表头）"); }
-  catch(e){ showToast("复制失败"); }
+el.runBtn.addEventListener("click",translateAndRender);
+el.copyBtn.addEventListener("click",async()=>{
+  const tsv=el.tableWrap.dataset.tsv||"";const lines=tsv.split(/\r?\n/);
+  const noHeader=lines.length>1?lines.slice(1).join("\n"):"";
+  if(!noHeader.trim()){showToast("没有可复制的 TSV");return;}
+  await robustCopy(noHeader);showToast("已复制 TSV");
 });
-el.dlBtn.addEventListener("click", ()=>{
-  const tsv = el.tableWrap.dataset.tsv || "";
-  if (!tsv.trim()){ showToast("没有可下载的 TSV"); return; }
-  const blob = new Blob([tsv], { type:"text/tab-separated-values;charset=utf-8" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url; a.download = "translations.tsv";
-  document.body.appendChild(a); a.click(); document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+el.dlBtn.addEventListener("click",()=>{
+  const tsv=el.tableWrap.dataset.tsv||"";if(!tsv.trim()){showToast("没有可下载的 TSV");return;}
+  const blob=new Blob([tsv],{type:"text/tab-separated-values;charset=utf-8"});
+  const url=URL.createObjectURL(blob);const a=document.createElement("a");
+  a.href=url;a.download="translations.tsv";a.click();URL.revokeObjectURL(url);
 });
 </script>
 
