@@ -5,86 +5,235 @@
 <title>多语言本土化翻译</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" href="data:,">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    --brand:#2b6cb0; --brand-dark:#1a4f80; --bg:#f0f2f5;
-    --ok:#10b981; --warn:#ef4444;
+    --brand:#3b82f6;
+    --brand-dark:#2563eb;
+    --bg:#f8fafc;
+    --ok:#10b981;
+    --warn:#ef4444;
+    --card:#ffffff;
+    --border:#e5e7eb;
+    --text:#1f2937;
   }
   body{
-    font-family:"Segoe UI", Arial, sans-serif;
-    background:var(--bg); margin:0; padding:28px; color:#333;
-    display:flex; justify-content:center; align-items:flex-start;
+    font-family:'Inter',sans-serif;
+    background:var(--bg);
+    margin:0;
+    padding:32px;
+    color:var(--text);
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
   }
   .container{
-    background:#fff; border-radius:14px; padding:22px; width:100%; max-width:980px;
-    box-shadow:0 6px 20px rgba(0,0,0,.08);
+    background:var(--card);
+    border-radius:16px;
+    padding:24px 28px;
+    width:100%;
+    max-width:1080px;
+    box-shadow:0 8px 24px rgba(0,0,0,.05);
+    display:grid;
+    grid-template-columns:1fr 1.1fr;
+    gap:24px;
   }
-  h1{ margin:0 0 12px; text-align:center; color:var(--brand); font-size:1.8rem; }
-  .sub{ text-align:center; color:#666; margin-bottom:18px; }
-  label{ font-weight:700; display:block; margin-top:12px; }
-  .row{ display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  h1{
+    grid-column:1 / -1;
+    margin:0 0 8px;
+    text-align:center;
+    color:var(--brand);
+    font-size:1.9rem;
+    font-weight:700;
+  }
+  .sub{
+    grid-column:1 / -1;
+    text-align:center;
+    color:#555;
+    margin-bottom:18px;
+  }
+  label{
+    font-weight:600;
+    display:block;
+    margin-top:14px;
+    margin-bottom:4px;
+  }
+  .row{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:12px;
+  }
+  input[type="text"],input[type="password"],input[type="number"],textarea{
+    width:100%;
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:10px 12px;
+    font-size:14px;
+    transition:border-color .2s, box-shadow .2s;
+  }
+  input:focus,textarea:focus{
+    outline:none;
+    border-color:var(--brand);
+    box-shadow:0 0 0 3px rgba(59,130,246,0.15);
+  }
   textarea{
-    width:100%; min-height:140px; padding:12px; border:1px solid #d1d5db; border-radius:10px; resize:vertical; font-size:14px;
+    min-height:140px;
+    resize:vertical;
   }
-  .muted{ color:#666; }
+  .muted{ color:#6b7280; }
+
   .btn{
-    border:none; border-radius:10px; padding:11px 14px; font-weight:700; cursor:pointer; color:#fff;
-    background:var(--brand); transition:background .15s, transform .05s;
+    border:none;
+    border-radius:10px;
+    padding:11px 16px;
+    font-weight:600;
+    cursor:pointer;
+    color:#fff;
+    background:linear-gradient(90deg,var(--brand),#06b6d4);
+    transition:transform .15s, box-shadow .2s;
   }
-  .btn:hover{ background:var(--brand-dark); }
-  .btn-ghost{ background:#e5e7eb; color:#111; }
-  .btn-ok{ background:var(--ok); }
-  .actions{ display:flex; flex-wrap:wrap; gap:10px; margin-top:10px; }
-  .status{ margin-top:8px; font-size:14px; }
-  .status.ok{ color:var(--ok); }
-  .status.warn{ color:var(--warn); }
+  .btn:hover{
+    transform:translateY(-1px);
+    box-shadow:0 4px 12px rgba(0,0,0,.1);
+  }
+  .btn:disabled{
+    opacity:.6;
+    cursor:not-allowed;
+  }
+  .btn-ghost{
+    background:#e5e7eb;
+    color:#111;
+  }
+  .btn-ok{
+    background:var(--ok);
+  }
+  .actions{
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    margin-top:14px;
+  }
+
+  .status{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:10px 12px;
+    border-radius:8px;
+    font-size:14px;
+    margin-top:10px;
+    font-weight:500;
+    background:#f1f5f9;
+  }
+  .status.ok{
+    color:var(--ok);
+    background:#ecfdf5;
+  }
+  .status.warn{
+    color:var(--warn);
+    background:#fef2f2;
+  }
+
+  .right-tools{ display:flex; gap:10px; justify-content:flex-end; }
+
+  /* 结果卡片与表格 */
+  .card{
+    background:#fff;
+    border:1px solid var(--border);
+    border-radius:12px;
+    padding:16px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.04);
+  }
+  .card h2{
+    margin:0 0 12px;
+    font-size:1.05rem;
+    color:#333;
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .card h2::before{ content:"📋"; }
+
   .table-wrap{
-    margin-top:16px; overflow:auto; border:1px solid #e5e7eb; border-radius:10px;
+    margin-top:10px;
+    overflow:auto;
+    border:1px solid var(--border);
+    border-radius:8px;
+    box-shadow:inset 0 0 0 1px #f1f5f9;
   }
-  table{ width:100%; border-collapse:separate; border-spacing:0; }
+  table{
+    width:100%;
+    border-collapse:collapse;
+  }
   thead th{
-    position:sticky; top:0; background:#f8fafc; z-index:1; 
-    border-bottom:1px solid #e5e7eb; padding:10px; font-weight:800; text-transform:uppercase; font-size:13px;
+    position:sticky;
+    top:0;
+    background:#f9fafb;
+    border-bottom:1px solid var(--border);
+    padding:10px;
+    font-weight:700;
+    text-transform:uppercase;
+    font-size:13px;
     letter-spacing:0.02em;
+    box-shadow:0 2px 4px rgba(0,0,0,0.05);
   }
   tbody td{
-    padding:10px; border-bottom:1px solid #f1f5f9; vertical-align:top; font-size:14px;
+    padding:10px;
+    border-bottom:1px solid #f1f5f9;
+    vertical-align:top;
+    font-size:14px;
+    transition:background .2s;
+  }
+  tbody tr:hover td{
+    background:#f9fafb;
   }
   tbody tr:nth-child(odd){ background:#fcfcfd; }
   .missing{ background:#fee2e2; }
-  .right-tools{ display:flex; gap:10px; justify-content:flex-end; }
-  .toast{
-    position:fixed; left:50%; bottom:24px; transform:translateX(-50%);
-    background:#111; color:#fff; padding:10px 14px; border-radius:8px; opacity:0;
-    transition:opacity .2s, transform .2s; pointer-events:none; font-size:14px;
+
+  /* 拖拽标签 */
+  .header-drag-list{
+    list-style:none;
+    padding:0;
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin:8px 0;
   }
-  .toast.show{ opacity:1; transform:translateX(-50%) translateY(-4px); }
+  .header-drag-list li{
+    background:#e0f2fe;
+    padding:6px 12px;
+    border-radius:50px;
+    border:1px solid #bae6fd;
+    cursor:grab;
+    user-select:none;
+    transition:background 0.2s;
+    font-size:13px;
+  }
+  .header-drag-list li:hover{
+    background:#bfdbfe;
+  }
+  .header-drag-list li.dragging{
+    opacity:0.6;
+    background:#93c5fd;
+  }
+
   .hint{ font-size:12px; color:#6b7280; margin-top:6px; }
 
-  /* 拖拽表头样式 */
-  .header-drag-list {
-    list-style: none;
-    padding: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin: 8px 0;
+  .toast{
+    position:fixed;
+    right:24px;
+    top:24px;
+    background:#111;
+    color:#fff;
+    padding:10px 14px;
+    border-radius:8px;
+    opacity:0;
+    transition:opacity .3s, transform .3s;
+    transform:translateY(-10px);
   }
-  .header-drag-list li {
-    background: #f0f3f7;
-    padding: 6px 12px;
-    border-radius: 6px;
-    border: 1px solid #ccc;
-    cursor: grab;
-    user-select: none;
-    transition: background 0.2s;
-  }
-  .header-drag-list li:hover {
-    background: #e2e6eb;
-  }
-  .header-drag-list li.dragging {
-    opacity: 0.5;
-    background: #cfd6de;
+  .toast.show{
+    opacity:1;
+    transform:translateY(0);
   }
 </style>
 </head>
@@ -94,63 +243,70 @@
   <h1>🌏 多语言本土化翻译</h1>
   <div class="sub">输入多行英文（每行一个），后端返回 TSV，前端渲染表格并自检。</div>
 
-  <label>源语言：</label>
-  <div class="row">
-    <input type="text" value="英语" disabled style="background:#f3f4f6;border:1px solid #d1d5db;border-radius:10px;padding:10px;">
-    <div class="muted" style="display:flex;align-items:center;"></div>
-  </div>
+  <!-- 左侧输入配置 -->
+  <div class="left-panel">
+    <label>源语言：</label>
+    <div class="row">
+      <input type="text" value="英语" disabled style="background:#f3f4f6;border:1px solid #d1d5db;border-radius:10px;padding:10px;">
+      <div class="muted" style="display:flex;align-items:center;"></div>
+    </div>
 
-  <div style="margin:10px 0;">
-    <label for="batchSize">批大小(数据量超过500行最好不要分批)：</label>
-    <input type="number" id="batchSize" value="50" min="1" max="500" style="width:60px;" />
-  </div>
+    <div style="margin:10px 0;">
+      <label for="batchSize">批大小(数据量超过500行最好不要分批)：</label>
+      <input type="number" id="batchSize" value="50" min="1" max="500" style="width:80px;">
+    </div>
 
-  <div style="margin:10px 0;">
-    <label for="userApiKey">API Key：</label>
-    <input type="password" id="userApiKey" placeholder="sk-..." style="width:340px;">
-  </div>
-  
-  <label>输入要翻译的词汇（每行一个）：</label>
-  <textarea id="sourceText" placeholder="示例：&#10;AI Stem Splitter&#10;Free Key and BPM Finder | Find Song Key &amp; BPM Online&#10;AUDIO-ZU-MIDI &lt;br&gt;&lt;/br&gt; Convert"></textarea>
+    <div style="margin:10px 0;">
+      <label for="userApiKey">API Key：</label>
+      <input type="password" id="userApiKey" placeholder="sk-..." style="width:340px;">
+    </div>
+    
+    <label>输入要翻译的词汇（每行一个）：</label>
+    <textarea id="sourceText" placeholder="示例：&#10;AI Stem Splitter&#10;Free Key and BPM Finder | Find Song Key &amp; BPM Online&#10;AUDIO-ZU-MIDI &lt;br&gt;&lt;/br&gt; Convert"></textarea>
 
-  <label>最佳本土化翻译示例（可选，多行）：</label>
-  <textarea id="bestExamples" placeholder="示例格式：&#10;AI Stem Splitter => AI 音轨分离器&#10;Free Key and BPM Finder => 免费调性与BPM检测工具"></textarea>
-  <div class="hint">这些示例会作为参考拼接到 AI 提示中，帮助生成更符合你要求的翻译。</div>
+    <label>最佳本土化翻译示例（可选，多行）：</label>
+    <textarea id="bestExamples" placeholder="示例格式：&#10;AI Stem Splitter => AI 音轨分离器&#10;Free Key and BPM Finder => 免费调性与BPM检测工具"></textarea>
+    <div class="hint">这些示例会作为参考拼接到 AI 提示中，帮助生成更符合你要求的翻译。</div>
 
+    <!-- 拖拽表头顺序 -->
+    <div class="header-drag-container">
+      <label>拖动调整语言顺序：</label>
+      <ul id="headerList" class="header-drag-list">
+        <li draggable="true" data-code="zh">zh</li>
+        <li draggable="true" data-code="ja">ja</li>
+        <li draggable="true" data-code="de">de</li>
+        <li draggable="true" data-code="pt">pt</li>
+        <li draggable="true" data-code="es">es</li>
+        <li draggable="true" data-code="fr">fr</li>
+        <li draggable="true" data-code="ko">ko</li>
+        <li draggable="true" data-code="tw">tw</li>
+        <li draggable="true" data-code="vi">vi</li>
+      </ul>
+    </div>
 
-  <!-- 拖拽表头顺序 -->
-  <div class="header-drag-container">
-    <label>拖动调整语言顺序：</label>
-    <ul id="headerList" class="header-drag-list">
-      <li draggable="true" data-code="zh">zh</li>
-      <li draggable="true" data-code="ja">ja</li>
-      <li draggable="true" data-code="de">de</li>
-      <li draggable="true" data-code="pt">pt</li>
-      <li draggable="true" data-code="es">es</li>
-      <li draggable="true" data-code="fr">fr</li>
-      <li draggable="true" data-code="ko">ko</li>
-      <li draggable="true" data-code="tw">tw</li>
-      <li draggable="true" data-code="vi">vi</li>
-    </ul>
-  </div>
-
-  <div class="actions">
-    <button id="runBtn" class="btn">🚀 翻译并生成表格</button>
-    <div class="right-tools" style="margin-left:auto;">
-      <button id="copyBtn" class="btn btn-ok">📋 复制 TSV</button>
-      <button id="dlBtn" class="btn btn-ghost">⬇️ 下载 TSV</button>
+    <div class="actions">
+      <button id="runBtn" class="btn">🚀 翻译并生成表格</button>
+      <div class="right-tools" style="margin-left:auto;">
+        <button id="copyBtn" class="btn btn-ok">📋 复制 TSV</button>
+        <button id="dlBtn" class="btn btn-ghost">⬇️ 下载 TSV</button>
+      </div>
     </div>
   </div>
-  <div id="status" class="status muted">待翻译</div>
 
-  <div class="table-wrap" id="tableWrap" style="display:none;">
-    <table id="resultTable">
-      <thead><tr></tr></thead>
-      <tbody></tbody>
-    </table>
+  <!-- 右侧结果展示 -->
+  <div class="right-panel">
+    <div class="card">
+      <h2>翻译结果</h2>
+      <div id="status" class="status muted">待翻译</div>
+      <div class="table-wrap" id="tableWrap" style="display:none;">
+        <table id="resultTable">
+          <thead><tr></tr></thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <div class="hint">注：表格中空白单元格会标红，表示可能漏译；HTML 标签与占位符原样保留。</div>
+    </div>
   </div>
-
-  <div class="hint">注：表格中空白单元格会标红，表示可能漏译；HTML 标签（如 &lt;br&gt;）与占位符会原样保留并按原位渲染。</div>
 </div>
 
 <div class="toast" id="toast">已复制</div>
@@ -158,7 +314,6 @@
 <script>
 const API = "https://localize-proxy.ne0s0u1-pd.workers.dev";
 const EXPECT_HEADER = ["zh","ja","de","pt","es","fr","ko","tw","vi"];
-
 const sleep = (ms)=>new Promise(r=>setTimeout(r, ms));
 
 // 从批大小输入框取值（没有就默认 50）
@@ -167,7 +322,7 @@ function getBatchSize(){
   const v = elInput ? parseInt(elInput.value,10) : 50;
   return Number.isFinite(v) && v > 0 ? v : 50;
 }
-  
+
 const el = {
   src: document.getElementById("sourceText"),
   status: document.getElementById("status"),
@@ -235,10 +390,7 @@ function parseTSV(tsv){
 }
 
 function renderTable(rows, inputLineCount){
-  // 第一行就是后端返回的动态表头
   const header = rows[0] || [];
-
-  // 渲染表头
   el.theadRow.innerHTML = "";
   header.forEach(h => {
     const th = document.createElement("th");
@@ -246,7 +398,6 @@ function renderTable(rows, inputLineCount){
     el.theadRow.appendChild(th);
   });
 
-  // 渲染数据行
   el.tbody.innerHTML = "";
   const dataRows = rows.slice(1);
   const missingCells = { count: 0 };
@@ -266,10 +417,7 @@ function renderTable(rows, inputLineCount){
     el.tbody.appendChild(tr);
   });
 
-  // 显示容器
   el.tableWrap.style.display = "block";
-
-  // 自检：行数
   const outLines = dataRows.length;
   if (outLines !== inputLineCount) {
     el.status.className = "status warn";
@@ -283,52 +431,41 @@ function renderTable(rows, inputLineCount){
   }
 }
 
-// 获取批次大小，默认为 50
-function getBatchSize(){
-  const elInput = document.getElementById("batchSize");
-  const v = elInput ? parseInt(elInput.value,10) : 50;
-  return Number.isFinite(v) && v > 0 ? v : 50;
-}
-
-
 async function translateAndRender(){
   const input = el.src.value.trim();
-  const examplesEl = document.getElementById("bestExamples"); // 获取“最佳本土化示例”的值
+  const examplesEl = document.getElementById("bestExamples");
   const examples = examplesEl ? examplesEl.value.trim() : "";
   const inputLines = splitLines(el.src.value);
-
   if (!input){
     alert("请输入英文（每行一个短语/句子）");
     return;
   }
 
-  const BATCH_SIZE = getBatchSize(); // 获取用户输入的批次大小
+  const BATCH_SIZE = getBatchSize();
   el.status.className = "status";
   el.status.textContent = "准备分批…";
   el.tableWrap.style.display = "none";
+  el.runBtn.disabled = true;
 
   try {
     const total = inputLines.length;
     let offset = 0;
-    let firstBatch = true;
     let combinedTSV = "";
-
     const totalBatches = Math.ceil(total / BATCH_SIZE);
 
     for (let batchIndex = 1; batchIndex <= totalBatches; batchIndex++) {
-      // 进度提示
       el.status.textContent = `翻译中… 第 ${batchIndex} / ${totalBatches} 批（${BATCH_SIZE} 行/批）`;
 
       const res = await fetch(API, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          text: inputLines.join("\n"),                     // 整体原文，后端用 offset/batchSize 切本批
-          examples,                        // 你的最佳本土化示例
-          headerOrder: getHeaderOrder(),   // 拖拽后的表头顺序
-          offset,                          // 本批起始行
-          batchSize: BATCH_SIZE,           // 本批大小
-          userApiKey: (document.getElementById("userApiKey")?.value || "").trim() // 新增：用户自己的 Key
+          text: inputLines.join("\n"),
+          examples,
+          headerOrder: getHeaderOrder(),
+          offset,
+          batchSize: BATCH_SIZE,
+          userApiKey: (document.getElementById("userApiKey")?.value || "").trim()
         })
       });
 
@@ -338,14 +475,12 @@ async function translateAndRender(){
       }
 
       const data = await res.json();
-
-      // 429/限流容错：后端可能返回 retryAfterMs
       if (data.error) {
         if (data.retryAfterMs) {
           const wait = Math.max(1200, data.retryAfterMs);
           el.status.textContent = `触发限流，${Math.ceil(wait / 1000)} 秒后继续…`;
           await sleep(wait);
-          batchIndex--; // 重试当前批
+          batchIndex--;
           continue;
         }
         throw new Error(data.error?.message || "后端错误");
@@ -354,42 +489,26 @@ async function translateAndRender(){
       const tsvPiece = (data.table || "").trim();
       if (!tsvPiece) throw new Error("后端返回空的 TSV 片段");
 
-      const lines = tsvPiece.split(/\r?\n/);
-      const isFirst = data.meta?.isFirstBatch;
+      if (data.meta?.isFirstBatch) combinedTSV = tsvPiece;
+      else combinedTSV += "\n" + tsvPiece;
 
-      if (isFirst) {
-        combinedTSV = tsvPiece; // 首批含表头
-      } else {
-        combinedTSV += "\n" + tsvPiece; // 后续批次直接拼接（后端已去表头）
-      }
-
-      // 推进 offset
       const meta = data.meta || {};
-      console.log("Batch", batchIndex, "offset:", offset, "hasMore:", meta.hasMore);
       if (!meta.hasMore) break;
       offset = meta.nextOffset;
-
-      await sleep(1500); // 每次请求后加延时，避免频繁请求触发限流
+      await sleep(1500);
     }
 
     const rows = parseTSV(combinedTSV);
     const truncatedRows = [rows[0], ...rows.slice(1, inputLines.length + 1)];
     renderTable(truncatedRows, inputLines.length);
-
-    // 保存：用于复制/下载时用的是干净版本
     el.tableWrap.dataset.tsv = truncatedRows.map(r => r.join("\t")).join("\n");
-
-
-    el.status.className = "status ok";
-    el.status.textContent = "✅ 翻译完成";
   } catch (e){
     el.status.className = "status warn";
     el.status.textContent = "请求失败：" + e.message;
+  } finally {
+    el.runBtn.disabled = false;
   }
 }
-
-
-
 
 async function robustCopy(text) {
   if (!window.isSecureContext) throw new Error("非 HTTPS 安全环境，无法写入剪贴板");
@@ -421,7 +540,6 @@ el.copyBtn.addEventListener("click", async ()=>{
   try{ await robustCopy(noHeader); showToast("已复制 TSV（不含表头）"); }
   catch(e){ showToast("复制失败"); }
 });
-
 el.dlBtn.addEventListener("click", ()=>{
   const tsv = el.tableWrap.dataset.tsv || "";
   if (!tsv.trim()){ showToast("没有可下载的 TSV"); return; }
@@ -436,9 +554,3 @@ el.dlBtn.addEventListener("click", ()=>{
 
 </body>
 </html>
-
-
-
-
-
-
