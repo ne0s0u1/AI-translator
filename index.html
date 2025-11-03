@@ -712,12 +712,33 @@ if (previewBtn && modal && closeBtn) {
     if (e.target === modal) modal.style.display = "none";
   });
 }
+// ✅ 表格单元格点击复制功能
+const tableBody = document.querySelector("#resultTable tbody");
+
+if (tableBody) {
+  tableBody.addEventListener("click", async (e) => {
+    const td = e.target.closest("td");
+    if (!td) return;
+    const text = td.textContent.trim();
+    if (!text) return;
+
+    try {
+      await navigator.clipboard.writeText(text);
+      showToast("已复制单元格内容");
+      td.style.backgroundColor = "#d1fae5"; // 临时高亮反馈
+      setTimeout(() => td.style.backgroundColor = "", 500);
+    } catch {
+      showToast("复制失败");
+    }
+  });
+}
 
 
 </script>
 
 </body>
 </html>
+
 
 
 
