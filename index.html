@@ -523,20 +523,17 @@ if (presetSelect && customPromptArea) {
 
 规则：
 - 保留原文格式与排版，不增删内容。
-- 保留所有技术词汇（如 stem separation、mastering、reverb、BPM、MIDI、AI vocal remover 等）。
+- JSON格式的数据要保留原有结构，不能影响开发，包括全部的[]{}，保留英文的逗号,英文的引号""，json中的key保留不翻译等等
 - 翻译需兼顾音乐制作、AI 创作与音频工程领域的专业准确性。
-- 专有名词、产品名或品牌名保持原文（如 MusicCreator AI、Suno、OpenMusic）。
+- 产品名或品牌名保持原文（如 MusicCreator AI、Suno、OpenMusic）。
 - 缺少合适译词时可保留英文原文，但需符合目标语言语序。
 - 语言风格：
 - 专业、自然、面向创作者、制作人、艺术家及普通用户。
 - 用词应清晰、简洁，避免过度营销或机械直译。
+- 对于原英文中的连词符，需要在不同目标语言下结合句意，语境，调整好表达的语序
 - 在描述功能或流程时，应采用音乐人常用表达方式。
 - 若涉及 SEO 描述，优先使用行业中搜索量较高的自然说法。
 
-翻译流程：
-① 直译（Literal Translation）：逐字逐句翻译，保留结构、技术词与排版。
-② 评估与反思（Evaluation and Reflection）：指出直译中的不自然之处、行业术语使用问题、语气偏差。
-③ 本地化译文（Free Translation）：根据评估优化为自然、流畅、具行业语感的翻译，保持技术与语义准确。
 
 说明：
 - 保留所有音频参数、符号、占位符及 HTML 标签。
@@ -738,6 +735,7 @@ if (tableBody) {
 
 </body>
 </html>
+
 
 
 
