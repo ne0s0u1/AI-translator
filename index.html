@@ -471,7 +471,61 @@ const bestExamplesArea = document.getElementById("bestExamples");
 if (examplePreset && bestExamplesArea) {
     // 简化了示例数据以节省空间，逻辑未变
     const examplePresets = {
-    music: `英语	ja	de	pt	es	fr	ko	vi\nbeats	打ち込み 音楽	beats	batidas	ritmos	Beats	beats	nhịp điệu\nFREE	無料	Kostenlos	Grátis	Gratis	Gratuit	무료	miễn phí`,
+    music: `英语	ja	de	pt	es	fr	ko	vi
+beats	打ち込み 音楽	beats	batidas	ritmos	Beats	beats	nhịp điệu
+FREE	無料	Kostenlos	Grátis	Gratis	Gratuit	무료	miễn phí
+karaoke	カラオケアプリ無料	Karaoke	karaokê	karaoke	Karaoké	가라오케	hát karaoke
+Online	オンライン	Online	Na rede	En línea	En Ligne	온라인	trực tuyến
+Lofi	Lofi	Lo-fi	Lofi	Lofi	Lofi	Lofi	Lofi
+AI Music Generator	音楽生成 AI	KI Musik Generator	Gerador de Música IA	Generador de Música IA	IA Musique Gratuite	AI 노래 만들기	                                            
+AI Voice	AI歌声	KI Stimme	Voz artificial	Voz de IA	IA Voix	AI 보이스	giọng AI
+soundtrack	サントラ	Soundtrack	Trilha Sonora	banda sonora	Bande Sonore	OST	nhạc phim
+AI Music	AI 音楽	KI Musik	Música IA	Música IA	IA Musique	AI 노래	AI hát
+BPM Tapper	BPMカウンター	BPM Messer	Tempo tapper	Calculadora de BPM	Détecteur De BPM	BPM 측정	tempo tap
+AI Lyrics Generator	歌詞 作る サイト	KI-Textgenerator	Gerador de Letras IA	Generador de Letras IA	Générateur De Parole IA	랩 가사 쓰는 사이트	tạo lời bài hát AI
+remove vocals	ボーカル除去	Gesang entfernen	Removedor de vocal	Quitar Vocales		보컬리무버	tách giọng
+AI Vocal Remover	ボーカル抽出	KI Vocal Remover	Removedor de Vocais 	Eliminador de Voz IA	Séparateur Voix Musique	보컬 리무버	tách giọng
+Effortlessly	簡単に	Mühelos	Sem esforço	sin esfuerzo	Facilement	무료	dễ dàng
+Music Creator	音楽作成	Musik Erstellen	Criador de Música	Creador de Música	Compositeur De Musique	작곡 프로그램	tạo nhạc
+AI Rap Generator	AIラップ生成	KI Rap Generator	Gerador de rap de IA	Generador de rap	Générateur de rap IA	AI 랩 생성기	tạo nhạc rap AI
+AI Stem Splitter	音声分離	KI Stem Splitter	Divisor de hastes AI	Separador de Pistas IA	Séparateur De Piste Audio	음원 분리	tách nhạc và giọng
+Voice Cloning	AI ボイス	Klonen von Gesangsstimmen	clonar voz	Clonación de Voz	Clonage Voix IA	AI 목소리 만들기	tạo giọng nói AI
+MIDI files	MIDIファイル	MIDI Dateien	Arquivos MIDI	archivos MIDI	Fichiers MIDI	미디 파일 	tệp MIDI
+Royalty Free	ロイヤリティフリー	Lizenzfreie	Sem Direitos Autorais	libre de derechos	Libre De Droits	저작권 없는	Không bản quyền
+AI Song Cover	AI カバー	KI Song Cover	criar capas IA	Portada de la canción AI	Cover IA	AI 노래 커버	bài hát cover AI
+MIDI Editor	MIDIエディタ	MIDI Editor	Editor MIDI	Editor MIDI	Éditeur MIDI	미디 에디터	trình chỉnh sửa MIDI
+MIDI converter	midi 変換	MIDI Konverter	Conversor de MIDI	convertidor MIDI	Convertisseur MIDI	미디 변환기	chuyển đổi MIDI
+AI Singing Voice Generator	AI 歌わせる	KI Gesangsstimmen Generator	Gerador de Voz de Canto IA	Generador de voz de canto con IA	Générateur de Voix IA	AI 목소리 만들기	tạo giọng hát AI
+AI Song Cover Generator	AIカバー やり方	KI Song Cover Generator	Gerador de Covers de Músicas com IA	Generador de portadas de canciones con IA	Générateur De Cover IA	AI 노래 커버 만들기	tạo bài hát cover AI
+AI MIDI Generator	midi 変換	KI MIDI Generator	Gerador MIDI AI	Generador de MIDI con IA	Générateur MIDI IA	AI 미디 생성	tạo MIDI AI
+lyrics to song generator	歌詞 から 作曲	KI Songtext erstellen	letras para gerador de músicas	letras a cancion	Générateur De Musique Par Paroles	가사 음악 생성기	công cụ tạo nhạc từ lời bài hát AI
+AI Instrumental Generator	bgm 作る サイト	 KI Hintergrundmusik Generator	Gerador Instrumental de IA	Generador de Instrumentales con IA	Générateur D'instrumental IA	AI 악기 생성기	tạo nhạc không lời AI
+Text to Music	歌詞を入れるだけで作曲 サイト	Text zu Musik	Texto para Música	Texto a música	Texte En Musique	텍스트 투 음악	tạo nhạc từ văn bản AI
+copyright free	著作権フリー	Lizenzfrei	Uso Livre	libre de derechos de autor	Musique Sans Droit D'auteur	저작권 없는	Không bản quyền
+AI Music Mastering	AIマスタリング	KI-Musik-Mastering	Masterização musical com IA	Masterización de Música con IA	Mastering IA	AI 마스터링	mastering AI
+Making AI Music	AI 音楽作成	KI-Musik erstellen	Fazendo música com IA	crear musica con ia	IA Musique	AI 음악 만들기	tạo nhạc
+Generate AI Music	AI 曲 作成	KI Musik Erstellen	Gerar Música com IA	crear musica con ia	Générateur De Musique IA	AI 노래 만들기	AI nhạc tạo
+Music Generation	ミュージックジェネレーション	Musikproduktion	Geração de Música	Creación de Música con IA	IA Creation Musique	음악 생성	làm nhạc
+AI Editing Tools	音楽編集アプリ		Ferramentas de edição de IA	Herramientas de Edición con IA	Editeur IA	AI 편집기	công cụ chỉnh sửa AI
+MUSIC CREATION TOOLS	音楽作成アプリ	MUSIKERSTELLUNGSTOOLS ENTDECKEN	FERRAMENTAS DE CRIAÇÃO MUSICAL	Herramientas de Creación Musical	Logiciel Musique	작곡 프로그램	phòng thu
+lyrics to song maker	歌詞を入れるだけで作曲 サイト	Songtext zu Musik	letras para criador de músicas	letras a cancion	énérateur de chansons à partir de paroles	가사를 음악으로 변환	công cụ tạo nhạc từ lời bài hát AI
+Lyric To Music	歌詞 から 作曲	Songtext zu Musik	Letra para Música	Letra a Música	Paroles En Musique	가사 음악 변환	tạo nhạc từ lời bài hát AI
+Photo to Music	写真に音楽をつける	Foto zu Musik	Foto para Música	Foto a Música	Photo En Musique	이미지 투 음악	tạo nhạc từ ảnh AI
+AI Text to Music Generator	AI 作詞 作曲	KI Text zu Musik Generator	Gerador de Música IA a partir de Texto	Generador de Música IA a partir de Texto	IA Qui Chante Un Texte	AI 음악 만들기	tạo nhạc từ văn bản AI
+Audio Separation	音声分離	Audiotrennung	Separação de Áudio	Separación de Audio	Séparateur Voix Musique	음원 분리	tách nhạc và giọng
+personal album	オリジナルアルバム	privates Album	álbum pessoal	álbum personal	Album Personnel	앨범	album cá nhân
+AI MUSIC PLATFORM	AI 音楽	KI Musikplattform	Plataforma de Música com IA	PLATAFORMA DE MÚSICA CON IA	Plateforme Musicale IA	AI 음악	nền tảng nhạc
+production-ready	即戦力	produktionsreif	pronto para produção	listas para la producción	Prêt À L'emploi	바로 사용 가능	Sẵn sàng để sử dụng
+make bgm	bgm 作る		criar fundo de musica	hacer bgm	Créer Une Musique De Fond	bgm 만들기	tạo nhạc nền
+AI song maker	AI作曲ツール	KI-Song-Maker	Criador de canções com IA	creador de canciones con IA	Créer De La Musique Avec L'IA	AI 노래만들기	tạo nhạc
+Slowed + Reverb	スロー+リバーブ	Verlangsamt und Hall	Desacelerado + Reverb	Ralentizado + Reverb	Ralenti + Réverbération	느려짐 + 리버브	Chậm + Reverb
+Noise Generator	ノイズジェネレーター	Rauschgenerator	Gerador de ruído	Generador de ruido	Générateur de bruit	노이즈 생성기	Trình tạo tiếng ồn
+Chord Progression	コード進行	Akkordfolge	Progressão de Acordes	Progresión de Acordes	Progression d'accords	코드 진행	Chuỗi hợp âm
+8-Bit	8ビット	8 Bit	8 bits	8 bits	8 bits	8비트	8-bit
+AI Background Music Generator	AI背景音楽ジェネレーター	KI Hintergrundmusik Generator	Gerador de Música de Fundo com IA	Generador de Música de Fondo con IA	Générateur de musique de fond IA	AI 배경 음악 생성기	Trình tạo nhạc nền AI
+Lofi Converter	ローファイコンバーター	Lo-Fi Konverter	Conversor Lofi	Convertidor Lofi	Convertisseur Lo-fi	로파이 변환기	Bộ chuyển đổi Lofi
+AI Music Maker	AI 音楽作成	KI Musik Erstellen	Fazedor de Música IA	Crear Musica Con IA	Créer De La Musique Avec L'IA	AI 음악 만들기	Công Cụ Tạo Nhạc AI
+AI Music Video Generator	AIミュージックビデオ生成	KI Musikvideo Generator	Gerador de Vídeos de Música IA	Generador de Videos Musicales IA	Générateur de Vidéos Musicales IA	AI 뮤직비디오 생성기	Trình tạo video ca nhạc AI`,
     coloring: `待补充`
   };
   examplePreset.addEventListener("change", () => {
@@ -559,3 +613,4 @@ if (tableBody) {
 </script>
 </body>
 </html>
+
