@@ -25,221 +25,223 @@
   }
 </style>
 </head>
-<body class="bg-slate-50 min-h-screen p-2 md:p-6 relative selection:bg-purple-200 selection:text-purple-900 flex flex-col items-center">
+<body class="bg-slate-50 min-h-screen p-3 md:p-8 relative selection:bg-purple-200 selection:text-purple-900 flex flex-col items-center">
 
-  <!-- 背景装饰 (重构：确保大分辨率下中心区域有光晕) -->
+  <!-- 背景装饰 -->
   <div class="fixed inset-0 overflow-hidden pointer-events-none -z-10">
     <!-- 左上角紫色 -->
     <div class="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-purple-300/30 rounded-full blur-[120px]"></div>
     <!-- 右下角蓝色 -->
     <div class="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] bg-blue-300/30 rounded-full blur-[120px]"></div>
-    <!-- 🔥 新增：屏幕正中央的巨大混合光晕，确保操作区底部有颜色 🔥 -->
+    <!-- 中央混合光晕 -->
     <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vh] bg-gradient-to-tr from-purple-100/40 to-blue-100/40 rounded-full blur-[100px] opacity-80"></div>
   </div>
 
-  <!-- 主容器：紧凑型亚克力毛玻璃 -->
-  <div class="container max-w-6xl w-full">
-    <!-- 减小了 padding (p-6 md:p-8) 以节省空间 -->
-    <div class="bg-white/30 backdrop-blur-2xl rounded-[32px] border border-white/40 shadow-[0_8px_30px_rgba(0,0,0,0.04)] p-6 md:p-8 relative overflow-hidden ring-1 ring-white/40">
+  <!-- 主容器：宽度调整为 max-w-[92%] 适配大屏，最大限制 1600px -->
+  <div class="container max-w-[92%] 2xl:max-w-[1600px] w-full transition-all duration-300">
+    <!-- 增加 padding (p-8 md:p-10) 让内容更舒展 -->
+    <div class="bg-white/30 backdrop-blur-2xl rounded-[32px] border border-white/40 shadow-[0_8px_30px_rgba(0,0,0,0.04)] p-6 md:p-10 relative overflow-hidden ring-1 ring-white/40">
       
       <!-- 顶部装饰条 -->
-      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-16 h-1 bg-white/50 rounded-b-lg backdrop-blur-md"></div>
+      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-20 h-1.5 bg-white/50 rounded-b-lg backdrop-blur-md"></div>
 
-      <!-- 标题区 (重构为紧凑横向布局) -->
-      <div class="flex items-center justify-between mb-6 border-b border-white/30 pb-4">
-        <div class="flex items-center gap-4">
-          <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-white/60 shadow-sm border border-white/50 backdrop-blur-md shrink-0">
-            <i data-lucide="languages" class="w-6 h-6 text-purple-600"></i>
+      <!-- 标题区 -->
+      <div class="flex items-center justify-between mb-6 border-b border-white/30 pb-5">
+        <div class="flex items-center gap-5">
+          <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-white/60 shadow-sm border border-white/50 backdrop-blur-md shrink-0 transition-transform hover:scale-105 duration-300">
+            <i data-lucide="languages" class="w-7 h-7 text-purple-600"></i>
           </div>
           <div>
-            <h1 class="text-2xl font-bold text-slate-800 tracking-tight leading-tight">多语言本土化翻译</h1>
-            <div class="flex items-center gap-2 mt-1">
-               <span class="text-xs font-semibold text-slate-500 bg-white/40 px-2 py-0.5 rounded-md border border-white/30">输入: 英文</span>
-               <span class="text-[10px] text-slate-400 hidden md:inline-block"> | Auto-Localization Tool</span>
+            <h1 class="text-2xl md:text-3xl font-bold text-slate-800 tracking-tight leading-tight">多语言本土化翻译</h1>
+            <div class="flex items-center gap-3 mt-1.5">
+               <span class="text-xs font-semibold text-slate-500 bg-white/40 px-2.5 py-0.5 rounded-md border border-white/30 shadow-sm">输入: 英文</span>
+               <span class="text-[11px] text-slate-400 hidden md:inline-block tracking-wide">| AI-Powered Localization Tool</span>
             </div>
           </div>
         </div>
-        <!-- 状态指示器移到右上角 -->
-        <div id="status" class="hidden md:flex px-3 py-1.5 rounded-lg bg-white/40 border border-white/40 text-slate-600 text-xs font-medium items-center gap-2 backdrop-blur-md shadow-sm">
-          <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+        <!-- 状态指示器 -->
+        <div id="status" class="hidden md:flex px-4 py-2 rounded-xl bg-white/40 border border-white/40 text-slate-600 text-xs font-medium items-center gap-2.5 backdrop-blur-md shadow-sm">
+          <span class="w-2 h-2 rounded-full bg-slate-400"></span>
           待机中
         </div>
       </div>
 
-      <!-- 核心设置行 (Grid 布局：将 Batch, Key, Preset 放在一行以节省纵向空间) -->
-      <div class="grid grid-cols-1 md:grid-cols-12 gap-4 mb-4">
+      <!-- 核心设置行 (间距 gap-6) -->
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-6">
         <!-- 批大小 -->
-        <div class="md:col-span-2">
+        <div class="md:col-span-2 2xl:col-span-1">
           <div class="relative group h-full">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <i data-lucide="layers" class="w-4 h-4 text-slate-400"></i>
+            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <i data-lucide="layers" class="w-5 h-5 text-slate-400 transition-colors group-focus-within:text-purple-500"></i>
             </div>
+            <!-- 高度调回 h-12 -->
             <input type="number" id="batchSize" value="50" min="1" max="500" placeholder="Batch" title="批大小"
-              class="w-full h-10 pl-9 pr-2 bg-white/40 border border-transparent rounded-xl text-slate-700 text-sm hover:bg-white/60 focus:bg-white/90 focus:ring-2 focus:ring-purple-200 transition-all outline-none shadow-sm font-medium">
+              class="w-full h-12 pl-11 pr-3 bg-white/40 border border-transparent rounded-xl text-slate-700 text-base hover:bg-white/60 focus:bg-white/90 focus:ring-2 focus:ring-purple-200 transition-all outline-none shadow-sm font-medium">
           </div>
         </div>
 
         <!-- API Key -->
-        <div class="md:col-span-10">
+        <div class="md:col-span-10 2xl:col-span-11">
           <div class="relative group h-full">
-            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <i data-lucide="key" class="w-4 h-4 text-slate-400"></i>
+            <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <i data-lucide="key" class="w-5 h-5 text-slate-400 transition-colors group-focus-within:text-purple-500"></i>
             </div>
+            <!-- 高度调回 h-12 -->
             <input type="password" id="userApiKey" placeholder="在此输入您的 API Key (sk-...)" 
-              class="w-full h-10 pl-9 pr-4 bg-white/40 border border-transparent rounded-xl text-slate-700 text-sm hover:bg-white/60 focus:bg-white/90 focus:ring-2 focus:ring-purple-200 transition-all outline-none shadow-sm font-mono">
+              class="w-full h-12 pl-11 pr-4 bg-white/40 border border-transparent rounded-xl text-slate-700 text-base hover:bg-white/60 focus:bg-white/90 focus:ring-2 focus:ring-purple-200 transition-all outline-none shadow-sm font-mono tracking-wide">
           </div>
         </div>
       </div>
       
-      <!-- 输入源文本 (压缩高度) -->
-      <div class="mb-4 relative">
+      <!-- 输入源文本 (稍微增高 min-h) -->
+      <div class="mb-6 relative group">
         <div class="absolute top-3 right-3 pointer-events-none z-10">
-            <span class="text-[10px] text-slate-400 font-medium bg-white/50 px-1.5 py-0.5 rounded">Source</span>
+            <span class="text-[10px] text-slate-400 font-bold bg-white/50 px-2 py-1 rounded-lg border border-white/30">SOURCE TEXT</span>
         </div>
         <textarea id="sourceText" placeholder="输入待翻译词汇 (每行一个)&#10;例如：&#10;AI Stem Splitter&#10;Free Key and BPM Finder"
-            class="w-full p-4 min-h-[120px] bg-white/40 border border-transparent rounded-2xl text-slate-700 placeholder-slate-400 hover:bg-white/60 focus:bg-white/80 focus:border-purple-200 focus:ring-4 focus:ring-purple-100/50 transition-all outline-none shadow-sm resize-y font-sans text-sm leading-relaxed backdrop-blur-sm"></textarea>
+            class="w-full p-5 min-h-[160px] bg-white/40 border border-transparent rounded-2xl text-slate-700 placeholder-slate-400 hover:bg-white/60 focus:bg-white/80 focus:border-purple-200 focus:ring-4 focus:ring-purple-100/50 transition-all outline-none shadow-sm resize-y font-sans text-sm leading-relaxed backdrop-blur-sm"></textarea>
       </div>
 
-      <!-- 辅助功能区 (Grid 布局，更加紧凑) -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4">
-        <!-- 左侧：示例 (高度压缩) -->
-        <div class="bg-white/30 rounded-2xl p-3 border border-white/40 shadow-sm backdrop-blur-md ring-1 ring-white/20 flex flex-col">
-          <div class="flex justify-between items-center mb-2">
-            <label class="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1">
-              <i data-lucide="sparkles" class="w-3 h-3 text-yellow-500"></i> 示例
+      <!-- 辅助功能区 (间距 gap-6) -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+        <!-- 左侧：示例 -->
+        <div class="bg-white/30 rounded-2xl p-4 border border-white/40 shadow-sm backdrop-blur-md ring-1 ring-white/20 flex flex-col transition-all hover:bg-white/40">
+          <div class="flex justify-between items-center mb-3">
+            <label class="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+              <i data-lucide="sparkles" class="w-3.5 h-3.5 text-yellow-500"></i> 示例 (Few-Shot)
             </label>
             <div class="flex gap-2">
-                <select id="examplePreset" class="text-[11px] bg-white/50 border-none rounded-lg px-2 py-0.5 text-slate-700 shadow-sm cursor-pointer hover:bg-white/80 focus:ring-1 focus:ring-purple-200 outline-none">
-                  <option value="">预设...</option>
-                  <option value="music">🎵 音乐</option>
-                  <option value="coloring">🎨 填色</option>
+                <select id="examplePreset" class="text-xs bg-white/50 border-none rounded-lg px-2.5 py-1 text-slate-700 shadow-sm cursor-pointer hover:bg-white/80 focus:ring-1 focus:ring-purple-200 outline-none transition-colors font-medium">
+                  <option value="">加载预设...</option>
+                  <option value="music">🎵 音乐场景</option>
+                  <option value="coloring">🎨 填色场景</option>
                 </select>
-                <button id="previewExampleBtn" class="text-[11px] bg-white/50 px-2 py-0.5 rounded-lg text-slate-600 hover:text-purple-600 hover:bg-white transition-colors border border-transparent hover:border-purple-100">
-                    预览
+                <button id="previewExampleBtn" class="text-xs bg-white/50 px-3 py-1 rounded-lg text-slate-600 hover:text-purple-600 hover:bg-white transition-all border border-transparent hover:border-purple-100 font-medium shadow-sm">
+                    预览表格
                 </button>
             </div>
           </div>
-          <textarea id="bestExamples" placeholder="AI Stem Splitter => AI 音轨分离器"
-            class="w-full p-3 h-20 bg-white/40 border border-transparent rounded-xl text-slate-700 placeholder-slate-400 focus:bg-white/80 focus:ring-2 focus:ring-purple-100/50 transition-all outline-none text-xs resize-none hover:bg-white/60"></textarea>
+          <textarea id="bestExamples" placeholder="示例格式：&#10;AI Stem Splitter => AI 音轨分离器"
+            class="w-full p-4 h-24 bg-white/40 border border-transparent rounded-xl text-slate-700 placeholder-slate-400 focus:bg-white/80 focus:ring-2 focus:ring-purple-100/50 transition-all outline-none text-xs resize-none hover:bg-white/60"></textarea>
         </div>
 
-        <!-- 右侧：提示词 (高度压缩) -->
-        <div class="bg-white/30 rounded-2xl p-3 border border-white/40 shadow-sm backdrop-blur-md ring-1 ring-white/20 flex flex-col">
-          <div class="flex justify-between items-center mb-2">
-             <label class="text-[11px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1">
-              <i data-lucide="message-square-dashed" class="w-3 h-3 text-blue-500"></i> 提示词
+        <!-- 右侧：提示词 -->
+        <div class="bg-white/30 rounded-2xl p-4 border border-white/40 shadow-sm backdrop-blur-md ring-1 ring-white/20 flex flex-col transition-all hover:bg-white/40">
+          <div class="flex justify-between items-center mb-3">
+             <label class="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+              <i data-lucide="message-square-dashed" class="w-3.5 h-3.5 text-blue-500"></i> 系统提示词 (System Prompt)
             </label>
-            <select id="presetPrompt" class="text-[11px] bg-white/50 border-none rounded-lg px-2 py-0.5 text-slate-700 shadow-sm cursor-pointer hover:bg-white/80 focus:ring-1 focus:ring-purple-200 outline-none">
-              <option value="">预设...</option>
+            <select id="presetPrompt" class="text-xs bg-white/50 border-none rounded-lg px-2.5 py-1 text-slate-700 shadow-sm cursor-pointer hover:bg-white/80 focus:ring-1 focus:ring-purple-200 outline-none transition-colors font-medium">
+              <option value="">加载预设...</option>
               <option value="music">🎵 音乐风格</option>
               <option value="coloring">🎨 填色风格</option>
             </select>
           </div>
-          <textarea id="customPrompt" placeholder="例如：保持专业语气..."
-            class="w-full p-3 h-20 bg-white/40 border border-transparent rounded-xl text-slate-700 placeholder-slate-400 focus:bg-white/80 focus:ring-2 focus:ring-purple-100/50 transition-all outline-none text-xs resize-none hover:bg-white/60"></textarea>
+          <textarea id="customPrompt" placeholder="例如：请保持专业语气，遇到专有名词保留英文..."
+            class="w-full p-4 h-24 bg-white/40 border border-transparent rounded-xl text-slate-700 placeholder-slate-400 focus:bg-white/80 focus:ring-2 focus:ring-purple-100/50 transition-all outline-none text-xs resize-none hover:bg-white/60"></textarea>
         </div>
       </div>
 
-      <!-- 底部工具栏：拖拽 + 按钮 -->
-      <div class="flex flex-col lg:flex-row items-end lg:items-center gap-4 border-t border-white/30 pt-4">
+      <!-- 底部工具栏 -->
+      <div class="flex flex-col lg:flex-row items-end lg:items-center gap-6 border-t border-white/30 pt-6">
         
-        <!-- 拖拽排序 (更紧凑的胶囊) -->
+        <!-- 拖拽排序 -->
         <div class="flex-1 w-full">
-            <div class="text-[10px] font-bold text-slate-400 uppercase mb-2 ml-1">输出顺序</div>
-            <ul id="headerList" class="flex flex-wrap gap-2">
-              <li draggable="true" data-code="zh" class="cursor-grab active:cursor-grabbing bg-white/60 text-slate-700 px-3 py-1.5 rounded-lg border border-white/50 shadow-sm text-xs font-semibold hover:bg-white hover:border-purple-200 hover:text-purple-600 transition-all select-none flex items-center gap-1.5">
+            <div class="text-[11px] font-bold text-slate-400 uppercase mb-3 ml-1 tracking-wider">输出列顺序 (拖拽调整)</div>
+            <ul id="headerList" class="flex flex-wrap gap-2.5">
+              <li draggable="true" data-code="zh" class="cursor-grab active:cursor-grabbing bg-white/60 text-slate-700 px-3.5 py-2 rounded-lg border border-white/50 shadow-sm text-xs font-bold hover:bg-white hover:border-purple-200 hover:text-purple-600 hover:shadow-md hover:-translate-y-0.5 transition-all select-none flex items-center gap-1.5">
                 <span class="w-1.5 h-1.5 rounded-full bg-red-400"></span> zh
               </li>
-              <li draggable="true" data-code="ja" class="cursor-grab active:cursor-grabbing bg-white/60 text-slate-700 px-3 py-1.5 rounded-lg border border-white/50 shadow-sm text-xs font-semibold hover:bg-white hover:border-purple-200 hover:text-purple-600 transition-all select-none flex items-center gap-1.5">
+              <li draggable="true" data-code="ja" class="cursor-grab active:cursor-grabbing bg-white/60 text-slate-700 px-3.5 py-2 rounded-lg border border-white/50 shadow-sm text-xs font-bold hover:bg-white hover:border-purple-200 hover:text-purple-600 hover:shadow-md hover:-translate-y-0.5 transition-all select-none flex items-center gap-1.5">
                 <span class="w-1.5 h-1.5 rounded-full bg-pink-400"></span> ja
               </li>
-              <li draggable="true" data-code="de" class="cursor-grab active:cursor-grabbing bg-white/60 text-slate-700 px-3 py-1.5 rounded-lg border border-white/50 shadow-sm text-xs font-semibold hover:bg-white hover:border-purple-200 hover:text-purple-600 transition-all select-none flex items-center gap-1.5">
+              <li draggable="true" data-code="de" class="cursor-grab active:cursor-grabbing bg-white/60 text-slate-700 px-3.5 py-2 rounded-lg border border-white/50 shadow-sm text-xs font-bold hover:bg-white hover:border-purple-200 hover:text-purple-600 hover:shadow-md hover:-translate-y-0.5 transition-all select-none flex items-center gap-1.5">
                 <span class="w-1.5 h-1.5 rounded-full bg-yellow-400"></span> de
               </li>
-              <li draggable="true" data-code="pt" class="cursor-grab active:cursor-grabbing bg-white/60 text-slate-700 px-3 py-1.5 rounded-lg border border-white/50 shadow-sm text-xs font-semibold hover:bg-white hover:border-purple-200 hover:text-purple-600 transition-all select-none flex items-center gap-1.5">
+              <li draggable="true" data-code="pt" class="cursor-grab active:cursor-grabbing bg-white/60 text-slate-700 px-3.5 py-2 rounded-lg border border-white/50 shadow-sm text-xs font-bold hover:bg-white hover:border-purple-200 hover:text-purple-600 hover:shadow-md hover:-translate-y-0.5 transition-all select-none flex items-center gap-1.5">
                 <span class="w-1.5 h-1.5 rounded-full bg-green-400"></span> pt
               </li>
-              <li draggable="true" data-code="es" class="cursor-grab active:cursor-grabbing bg-white/60 text-slate-700 px-3 py-1.5 rounded-lg border border-white/50 shadow-sm text-xs font-semibold hover:bg-white hover:border-purple-200 hover:text-purple-600 transition-all select-none flex items-center gap-1.5">
+              <li draggable="true" data-code="es" class="cursor-grab active:cursor-grabbing bg-white/60 text-slate-700 px-3.5 py-2 rounded-lg border border-white/50 shadow-sm text-xs font-bold hover:bg-white hover:border-purple-200 hover:text-purple-600 hover:shadow-md hover:-translate-y-0.5 transition-all select-none flex items-center gap-1.5">
                 <span class="w-1.5 h-1.5 rounded-full bg-orange-400"></span> es
               </li>
-              <li draggable="true" data-code="fr" class="cursor-grab active:cursor-grabbing bg-white/60 text-slate-700 px-3 py-1.5 rounded-lg border border-white/50 shadow-sm text-xs font-semibold hover:bg-white hover:border-purple-200 hover:text-purple-600 transition-all select-none flex items-center gap-1.5">
+              <li draggable="true" data-code="fr" class="cursor-grab active:cursor-grabbing bg-white/60 text-slate-700 px-3.5 py-2 rounded-lg border border-white/50 shadow-sm text-xs font-bold hover:bg-white hover:border-purple-200 hover:text-purple-600 hover:shadow-md hover:-translate-y-0.5 transition-all select-none flex items-center gap-1.5">
                 <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span> fr
               </li>
-              <li draggable="true" data-code="ko" class="cursor-grab active:cursor-grabbing bg-white/60 text-slate-700 px-3 py-1.5 rounded-lg border border-white/50 shadow-sm text-xs font-semibold hover:bg-white hover:border-purple-200 hover:text-purple-600 transition-all select-none flex items-center gap-1.5">
+              <li draggable="true" data-code="ko" class="cursor-grab active:cursor-grabbing bg-white/60 text-slate-700 px-3.5 py-2 rounded-lg border border-white/50 shadow-sm text-xs font-bold hover:bg-white hover:border-purple-200 hover:text-purple-600 hover:shadow-md hover:-translate-y-0.5 transition-all select-none flex items-center gap-1.5">
                 <span class="w-1.5 h-1.5 rounded-full bg-teal-400"></span> ko
               </li>
-              <li draggable="true" data-code="tw" class="cursor-grab active:cursor-grabbing bg-white/60 text-slate-700 px-3 py-1.5 rounded-lg border border-white/50 shadow-sm text-xs font-semibold hover:bg-white hover:border-purple-200 hover:text-purple-600 transition-all select-none flex items-center gap-1.5">
+              <li draggable="true" data-code="tw" class="cursor-grab active:cursor-grabbing bg-white/60 text-slate-700 px-3.5 py-2 rounded-lg border border-white/50 shadow-sm text-xs font-bold hover:bg-white hover:border-purple-200 hover:text-purple-600 hover:shadow-md hover:-translate-y-0.5 transition-all select-none flex items-center gap-1.5">
                  <span class="w-1.5 h-1.5 rounded-full bg-red-300"></span> tw
               </li>
-              <li draggable="true" data-code="vi" class="cursor-grab active:cursor-grabbing bg-white/60 text-slate-700 px-3 py-1.5 rounded-lg border border-white/50 shadow-sm text-xs font-semibold hover:bg-white hover:border-purple-200 hover:text-purple-600 transition-all select-none flex items-center gap-1.5">
+              <li draggable="true" data-code="vi" class="cursor-grab active:cursor-grabbing bg-white/60 text-slate-700 px-3.5 py-2 rounded-lg border border-white/50 shadow-sm text-xs font-bold hover:bg-white hover:border-purple-200 hover:text-purple-600 hover:shadow-md hover:-translate-y-0.5 transition-all select-none flex items-center gap-1.5">
                  <span class="w-1.5 h-1.5 rounded-full bg-red-600"></span> vi
               </li>
             </ul>
         </div>
 
-        <!-- 按钮组 (紧贴右下) -->
-        <div class="flex gap-2 w-full lg:w-auto mt-2 lg:mt-0">
-          <button id="copyBtn" class="flex-1 lg:flex-none h-11 px-5 rounded-xl bg-white/60 text-purple-700 font-semibold border border-purple-100 shadow-sm hover:bg-white/80 hover:shadow-md transition-all flex items-center justify-center gap-2 text-sm">
-            <i data-lucide="clipboard-check" class="w-4 h-4"></i> 复制
+        <!-- 按钮组 (高度调回 h-12) -->
+        <div class="flex gap-3 w-full lg:w-auto mt-2 lg:mt-0">
+          <button id="copyBtn" class="flex-1 lg:flex-none h-12 px-6 rounded-xl bg-white/60 text-purple-700 font-semibold border border-purple-100 shadow-sm hover:bg-white/80 hover:shadow-md hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 text-sm group">
+            <i data-lucide="clipboard-check" class="w-4.5 h-4.5 group-hover:scale-110 transition-transform"></i> 复制 TSV
           </button>
-          <button id="dlBtn" class="flex-1 lg:flex-none h-11 px-5 rounded-xl bg-white/60 text-slate-700 font-semibold border border-slate-100 shadow-sm hover:bg-white/80 hover:shadow-md transition-all flex items-center justify-center gap-2 text-sm">
-            <i data-lucide="download" class="w-4 h-4"></i> 下载
+          <button id="dlBtn" class="flex-1 lg:flex-none h-12 px-6 rounded-xl bg-white/60 text-slate-700 font-semibold border border-slate-100 shadow-sm hover:bg-white/80 hover:shadow-md hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 text-sm group">
+            <i data-lucide="download" class="w-4.5 h-4.5 group-hover:scale-110 transition-transform"></i> 下载
           </button>
-          <button id="runBtn" class="flex-[2] lg:flex-none h-11 px-8 rounded-xl bg-slate-800/90 text-white font-bold shadow-lg shadow-slate-400/30 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 text-sm backdrop-blur-md">
-            <i data-lucide="rocket" class="w-4 h-4"></i> 立即翻译
+          <button id="runBtn" class="flex-[2] lg:flex-none h-12 px-10 rounded-xl bg-slate-800/90 text-white font-bold shadow-lg shadow-slate-400/30 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2.5 text-sm backdrop-blur-md hover:bg-slate-900">
+            <i data-lucide="rocket" class="w-5 h-5"></i> 立即翻译
           </button>
         </div>
       </div>
 
       <!-- 移动端可见的状态条 -->
-      <div id="statusMobile" class="md:hidden mt-4 p-3 rounded-lg bg-white/40 border border-white/40 text-slate-600 text-xs font-medium flex items-center gap-2 backdrop-blur-md shadow-sm">
-        <span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+      <div id="statusMobile" class="md:hidden mt-5 p-3 rounded-xl bg-white/40 border border-white/40 text-slate-600 text-xs font-medium flex items-center gap-2 backdrop-blur-md shadow-sm">
+        <span class="w-2 h-2 rounded-full bg-slate-400"></span>
         待机中
       </div>
 
     </div>
 
-    <!-- 结果展示区 (也压缩了 Padding) -->
-    <div class="result-section mt-6 bg-white/30 backdrop-blur-2xl rounded-[32px] border border-white/40 shadow-[0_8px_30px_rgba(0,0,0,0.04)] p-6 relative hidden ring-1 ring-white/30" id="resultContainer">
-      <h2 class="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
-        <div class="p-1.5 bg-green-100/80 rounded-lg text-green-700 backdrop-blur-sm">
-          <i data-lucide="table-2" class="w-4 h-4"></i>
+    <!-- 结果展示区 -->
+    <div class="result-section mt-6 bg-white/30 backdrop-blur-2xl rounded-[32px] border border-white/40 shadow-[0_8px_30px_rgba(0,0,0,0.04)] p-6 md:p-10 relative hidden ring-1 ring-white/30 transition-all" id="resultContainer">
+      <h2 class="text-xl font-bold text-slate-800 mb-5 flex items-center gap-2.5">
+        <div class="p-2 bg-green-100/80 rounded-lg text-green-700 backdrop-blur-sm">
+          <i data-lucide="table-2" class="w-5 h-5"></i>
         </div>
         翻译结果
       </h2>
       
-      <div class="table-wrap overflow-x-auto rounded-xl border border-white/40 shadow-sm bg-white/20 backdrop-blur-sm" id="tableWrap" style="display:none;">
-        <table id="resultTable" class="w-full text-left border-collapse">
+      <div class="table-wrap overflow-x-auto rounded-2xl border border-white/40 shadow-sm bg-white/20 backdrop-blur-sm transition-all" id="tableWrap" style="display:none;">
+        <table id="resultTable" class="w-full text-left border-collapse min-w-[800px]">
           <thead><tr class="bg-white/40 border-b border-white/30 text-xs uppercase text-slate-600 font-bold tracking-wider backdrop-blur-sm"></tr></thead>
           <tbody class="divide-y divide-white/30 text-sm text-slate-700"></tbody>
         </table>
       </div>
-      <div class="text-[11px] text-slate-500 mt-3 flex items-center gap-1.5 font-medium">
-        <i data-lucide="info" class="w-3 h-3"></i>
+      <div class="text-[11px] text-slate-500 mt-4 flex items-center gap-1.5 font-medium bg-white/30 inline-flex px-3 py-1 rounded-full border border-white/20">
+        <i data-lucide="info" class="w-3.5 h-3.5"></i>
         注：空白单元格标红表示可能漏译。
       </div>
     </div>
   </div>
 
   <!-- 全局 Toast 通知 -->
-  <div class="toast fixed top-6 right-6 bg-slate-800/90 text-white px-6 py-3 rounded-xl shadow-2xl text-sm font-medium flex items-center gap-3 opacity-0 translate-y-[-20px] transition-all duration-300 z-[100] backdrop-blur-md" id="toast">
-    <i data-lucide="check-circle-2" class="w-4 h-4 text-green-400"></i>
+  <div class="toast fixed top-8 right-8 bg-slate-800/90 text-white px-6 py-3 rounded-2xl shadow-2xl text-sm font-medium flex items-center gap-3 opacity-0 translate-y-[-20px] transition-all duration-300 z-[100] backdrop-blur-md border border-white/10" id="toast">
+    <i data-lucide="check-circle-2" class="w-5 h-5 text-green-400"></i>
     <span id="toastMsg">已复制</span>
   </div>
 
   <!-- 示例预览模态框 -->
-  <div id="examplePreviewModal" class="fixed inset-0 z-[1000] hidden items-center justify-center bg-slate-900/30 backdrop-blur-md p-4">
-   <div class="bg-white/80 backdrop-blur-2xl rounded-3xl w-full max-w-4xl max-h-[80vh] flex flex-col shadow-2xl border border-white/50">
-      <div class="flex justify-between items-center p-4 border-b border-white/30">
-       <h3 class="text-base font-bold text-slate-800 flex items-center gap-2">
-         <i data-lucide="eye" class="w-4 h-4 text-purple-600"></i> 最佳示例预览
+  <div id="examplePreviewModal" class="fixed inset-0 z-[1000] hidden items-center justify-center bg-slate-900/30 backdrop-blur-md p-4 transition-all">
+   <div class="bg-white/80 backdrop-blur-2xl rounded-[32px] w-full max-w-5xl max-h-[85vh] flex flex-col shadow-2xl border border-white/50 ring-1 ring-white/40">
+      <div class="flex justify-between items-center p-6 border-b border-white/30">
+       <h3 class="text-lg font-bold text-slate-800 flex items-center gap-2">
+         <i data-lucide="eye" class="w-5 h-5 text-purple-600"></i> 最佳示例预览
        </h3>
-        <button id="closePreviewBtn" class="w-7 h-7 rounded-full bg-white/50 text-slate-600 flex items-center justify-center hover:bg-white transition-colors backdrop-blur-sm">
-          <i data-lucide="x" class="w-4 h-4"></i>
+        <button id="closePreviewBtn" class="w-8 h-8 rounded-full bg-white/50 text-slate-600 flex items-center justify-center hover:bg-white transition-colors backdrop-blur-sm shadow-sm">
+          <i data-lucide="x" class="w-5 h-5"></i>
         </button>
      </div>
-      <div id="examplePreviewTableWrap" class="flex-1 overflow-auto p-4">
-        <table id="examplePreviewTable" class="w-full text-left text-sm border-collapse">
+      <div id="examplePreviewTableWrap" class="flex-1 overflow-auto p-6">
+        <table id="examplePreviewTable" class="w-full text-left text-sm border-collapse min-w-[600px]">
           <thead></thead>
           <tbody></tbody>
        </table>
@@ -264,12 +266,12 @@ function updateStatus(html, className) {
   const innerContent = html;
   // 更新桌面端
   if (statusDesktop) {
-    statusDesktop.className = `hidden md:flex px-3 py-1.5 rounded-lg text-xs font-medium items-center gap-2 backdrop-blur-md shadow-sm border ${className}`;
+    statusDesktop.className = `hidden md:flex px-4 py-2 rounded-xl text-xs font-medium items-center gap-2.5 backdrop-blur-md shadow-sm border ${className}`;
     statusDesktop.innerHTML = innerContent;
   }
   // 更新移动端
   if (statusMobile) {
-    statusMobile.className = `md:hidden mt-4 p-3 rounded-lg text-xs font-medium flex items-center gap-2 backdrop-blur-md shadow-sm border ${className}`;
+    statusMobile.className = `md:hidden mt-5 p-3 rounded-xl text-xs font-medium flex items-center gap-2 backdrop-blur-md shadow-sm border ${className}`;
     statusMobile.innerHTML = innerContent;
   }
   lucide.createIcons();
@@ -351,7 +353,7 @@ function renderTable(rows, inputLineCount){
   header.forEach(h => {
     const th = document.createElement("th");
     th.textContent = h;
-    th.className = "px-4 py-3 bg-white/60 backdrop-blur sticky top-0 font-bold text-slate-600 border-b border-white/40 z-10";
+    th.className = "px-6 py-4 bg-white/60 backdrop-blur sticky top-0 font-bold text-slate-600 border-b border-white/40 z-10";
     el.theadRow.appendChild(th);
   });
 
@@ -364,7 +366,7 @@ function renderTable(rows, inputLineCount){
     header.forEach((_, i) => {
       const td = document.createElement("td");
       const val = (cols[i] ?? "").trim();
-      td.className = "px-4 py-3 border-b border-white/30 group-last:border-none align-top leading-relaxed text-slate-700";
+      td.className = "px-6 py-4 border-b border-white/30 group-last:border-none align-top leading-relaxed text-slate-700";
       
       if (!val) { 
         td.classList.add("bg-red-50/60", "text-red-500"); 
@@ -385,13 +387,13 @@ function renderTable(rows, inputLineCount){
 
   if (outLines !== inputLineCount) {
     statusClass = "bg-red-50/60 text-red-600 border-red-100/50";
-    statusHTML = `<i data-lucide="alert-triangle" class="w-3 h-3"></i> <span>行数异常: ${inputLineCount}→${outLines}</span>`;
+    statusHTML = `<i data-lucide="alert-triangle" class="w-4 h-4"></i> <span>行数异常: ${inputLineCount}→${outLines}</span>`;
   } else if (missingCount > 0) {
     statusClass = "bg-orange-50/60 text-orange-600 border-orange-100/50";
-    statusHTML = `<i data-lucide="alert-circle" class="w-3 h-3"></i> <span>${missingCount} 空格</span>`;
+    statusHTML = `<i data-lucide="alert-circle" class="w-4 h-4"></i> <span>${missingCount} 空格</span>`;
   } else {
     statusClass = "bg-green-50/60 text-green-600 border-green-100/50";
-    statusHTML = `<i data-lucide="check-circle" class="w-3 h-3"></i> <span>完成</span>`;
+    statusHTML = `<i data-lucide="check-circle" class="w-4 h-4"></i> <span>完成</span>`;
   }
   updateStatus(statusHTML, statusClass);
 }
@@ -405,7 +407,7 @@ async function translateAndRender(){
 
   const BATCH_SIZE = getBatchSize();
   
-  updateStatus(`<i data-lucide="loader-2" class="w-3 h-3 animate-spin"></i> <span>准备中...</span>`, "bg-blue-50/60 text-blue-600 border-blue-100/50");
+  updateStatus(`<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> <span>准备中...</span>`, "bg-blue-50/60 text-blue-600 border-blue-100/50");
 
   el.tableWrap.style.display = "none"; 
   el.runBtn.disabled = true;
@@ -415,7 +417,7 @@ async function translateAndRender(){
     const total = inputLines.length; let offset = 0; let combinedTSV = "";
     const totalBatches = Math.ceil(total / BATCH_SIZE);
     for (let i=1;i<=totalBatches;i++){
-      updateStatus(`<i data-lucide="loader-2" class="w-3 h-3 animate-spin"></i> <span>批次 ${i}/${totalBatches}</span>`, "bg-purple-50/60 text-purple-600 border-purple-100/50");
+      updateStatus(`<i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i> <span>批次 ${i}/${totalBatches}</span>`, "bg-purple-50/60 text-purple-600 border-purple-100/50");
       
       const res = await fetch(API,{
         method:"POST",headers:{"Content-Type":"application/json"},
@@ -435,7 +437,7 @@ async function translateAndRender(){
     renderTable(rows,inputLines.length);
     el.tableWrap.dataset.tsv=rows.map(r=>r.join("\t")).join("\n");
   }catch(e){
-    updateStatus(`<i data-lucide="x-circle" class="w-3 h-3"></i> <span>失败</span>`, "bg-red-50/60 text-red-600 border-red-100/50");
+    updateStatus(`<i data-lucide="x-circle" class="w-4 h-4"></i> <span>失败</span>`, "bg-red-50/60 text-red-600 border-red-100/50");
     showToast(e.message);
   }finally{
     el.runBtn.disabled=false;
@@ -510,7 +512,7 @@ function parseTSVToTable(tsvText) {
   rows[0].forEach(h => {
     const th = document.createElement("th");
     th.textContent = h;
-    th.className = "px-4 py-3 bg-white/60 font-bold text-slate-700 border-b border-white/40 sticky top-0 backdrop-blur-sm";
+    th.className = "px-6 py-3 bg-white/60 font-bold text-slate-700 border-b border-white/40 sticky top-0 backdrop-blur-sm";
     headerRow.appendChild(th);
   });
   thead.appendChild(headerRow);
@@ -520,7 +522,7 @@ function parseTSVToTable(tsvText) {
     r.forEach(c => {
       const td = document.createElement("td");
       td.textContent = c;
-      td.className = "px-4 py-2 border-b border-white/20 text-slate-600";
+      td.className = "px-6 py-2 border-b border-white/20 text-slate-600";
       tr.appendChild(td);
     });
     tbody.appendChild(tr);
