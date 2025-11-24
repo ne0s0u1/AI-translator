@@ -5,186 +5,218 @@
 <title>多语言本土化翻译</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="icon" href="data:,">
+<!-- 引入字体 -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!-- 引入 Tailwind CSS -->
 <script src="https://cdn.tailwindcss.com"></script>
+<!-- 引入 Icons -->
 <script src="https://unpkg.com/lucide@latest"></script>
 
 <style>
+  /* 滚动条美化 */
   ::-webkit-scrollbar { width: 6px; height: 6px; }
   ::-webkit-scrollbar-track { background: transparent; }
   ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
   ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+  
   body { font-family: 'Inter', sans-serif; }
   .lucide { vertical-align: middle; }
-  .dragging { opacity: 0.5; transform: scale(0.95); }
   
-  /* 针对小屏幕的微调 */
-  @media (max-height: 800px) {
-    .compact-hide { display: none; }
-    .container-padding { padding: 1.5rem !important; }
+  /* 拖拽样式 */
+  .dragging { opacity: 0.5; transform: scale(0.95); }
+
+  /* 🔥 性能优化动画：移除 mix-blend-mode，使用 translate3d 开启硬件加速 🔥 */
+  @keyframes float-slow {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    50% { transform: translate3d(30px, -30px, 0); }
   }
+  @keyframes float-medium {
+    0%, 100% { transform: translate3d(0, 0, 0); }
+    50% { transform: translate3d(-20px, 40px, 0); }
+  }
+  
+  .animate-float-slow { animation: float-slow 10s ease-in-out infinite; will-change: transform; }
+  .animate-float-medium { animation: float-medium 8s ease-in-out infinite; will-change: transform; }
 </style>
 </head>
 <body class="bg-slate-50 min-h-screen p-3 md:p-8 relative selection:bg-purple-200 selection:text-purple-900 flex flex-col items-center">
 
-  <!-- 背景装饰 -->
+  <!-- 
+     🎨 背景装饰 (性能优化版)
+     z-index: -10 且 position: fixed 确保不随滚动重绘，解决卡顿。
+  -->
   <div class="fixed inset-0 overflow-hidden pointer-events-none -z-10">
-    <!-- 左上角紫色 -->
-    <div class="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] bg-purple-300/30 rounded-full blur-[120px]"></div>
-    <!-- 右下角蓝色 -->
-    <div class="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] bg-blue-300/30 rounded-full blur-[120px]"></div>
-    <!-- 中央混合光晕 -->
-    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vh] bg-gradient-to-tr from-purple-100/40 to-blue-100/40 rounded-full blur-[100px] opacity-80"></div>
+    <div class="absolute inset-0 bg-slate-50/90"></div>
+    
+    <!-- 紫色光斑 -->
+    <div class="absolute top-[-10%] left-[-10%] w-[40rem] h-[40rem] bg-purple-400/20 rounded-full blur-[80px] animate-float-slow"></div>
+    <!-- 蓝色光斑 -->
+    <div class="absolute top-[-10%] right-[-10%] w-[35rem] h-[35rem] bg-blue-400/20 rounded-full blur-[80px] animate-float-medium animation-delay-2000"></div>
+    <!-- 粉色光斑 -->
+    <div class="absolute bottom-[-10%] left-[20%] w-[45rem] h-[45rem] bg-pink-400/15 rounded-full blur-[90px] animate-float-slow animation-delay-4000"></div>
+    <!-- 中心高光 -->
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[80vw] h-[80vh] bg-gradient-to-tr from-white/40 to-transparent rounded-full blur-[60px]"></div>
   </div>
 
-  <!-- 主容器：宽度调整为 max-w-[92%] 适配大屏，最大限制 1600px -->
-  <div class="container max-w-[92%] 2xl:max-w-[1600px] w-full transition-all duration-300">
-    <!-- 增加 padding (p-8 md:p-10) 让内容更舒展 -->
-    <div class="bg-white/30 backdrop-blur-2xl rounded-[32px] border border-white/40 shadow-[0_8px_30px_rgba(0,0,0,0.04)] p-6 md:p-10 relative overflow-hidden ring-1 ring-white/40">
+  <!-- 主容器：亚克力毛玻璃 -->
+  <div class="container max-w-[95%] 2xl:max-w-[1600px] w-full transition-all duration-300">
+    <div class="bg-white/40 backdrop-blur-xl rounded-[32px] border border-white/60 shadow-[0_8px_30px_rgba(0,0,0,0.04)] p-6 md:p-10 relative overflow-hidden ring-1 ring-white/50">
       
       <!-- 顶部装饰条 -->
-      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-20 h-1.5 bg-white/50 rounded-b-lg backdrop-blur-md"></div>
+      <div class="absolute top-0 left-1/2 -translate-x-1/2 w-20 h-1.5 bg-white/60 rounded-b-lg backdrop-blur-md"></div>
 
       <!-- 标题区 -->
-      <div class="flex items-center justify-between mb-6 border-b border-white/30 pb-5">
+      <div class="flex flex-col md:flex-row items-center justify-between mb-8 border-b border-white/30 pb-6 gap-4 relative z-10">
         <div class="flex items-center gap-5">
-          <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-white/60 shadow-sm border border-white/50 backdrop-blur-md shrink-0 transition-transform hover:scale-105 duration-300">
+          <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-white/70 shadow-sm border border-white/60 backdrop-blur-md shrink-0 transition-transform hover:scale-105 duration-300">
             <i data-lucide="languages" class="w-7 h-7 text-purple-600"></i>
           </div>
           <div>
             <h1 class="text-2xl md:text-3xl font-bold text-slate-800 tracking-tight leading-tight">多语言本土化翻译</h1>
             <div class="flex items-center gap-3 mt-1.5">
-               <span class="text-xs font-semibold text-slate-500 bg-white/40 px-2.5 py-0.5 rounded-md border border-white/30 shadow-sm">输入: 英文</span>
+               <span class="text-xs font-semibold text-slate-500 bg-white/50 px-2.5 py-0.5 rounded-md border border-white/30 shadow-sm">输入: 英文</span>
                <span class="text-[11px] text-slate-400 hidden md:inline-block tracking-wide">| AI-Powered Localization Tool</span>
             </div>
           </div>
         </div>
-        <!-- 状态指示器 -->
-        <div id="status" class="hidden md:flex px-4 py-2 rounded-xl bg-white/40 border border-white/40 text-slate-600 text-xs font-medium items-center gap-2.5 backdrop-blur-md shadow-sm">
+        
+        <!-- 桌面端状态指示器 -->
+        <div id="status" class="hidden md:flex px-4 py-2 rounded-xl bg-white/50 border border-white/40 text-slate-600 text-xs font-medium items-center gap-2.5 backdrop-blur-md shadow-sm">
           <span class="w-2 h-2 rounded-full bg-slate-400"></span>
           待机中
         </div>
       </div>
 
-      <!-- 核心设置行 (间距 gap-6) -->
-      <div class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-6">
+      <!-- 核心设置行 (Batch + API Key) -->
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-6 mb-6 relative z-10">
         <!-- 批大小 -->
         <div class="md:col-span-2 2xl:col-span-1">
-          <div class="relative group h-full">
+          <label class="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 ml-1 block">批次大小</label>
+          <div class="relative group h-12">
             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-              <i data-lucide="layers" class="w-5 h-5 text-slate-400 transition-colors group-focus-within:text-purple-500"></i>
+              <i data-lucide="layers" class="w-4 h-4 text-slate-400 transition-colors group-focus-within:text-purple-500"></i>
             </div>
-            <!-- 高度调回 h-12 -->
-            <input type="number" id="batchSize" value="50" min="1" max="500" placeholder="Batch" title="批大小"
-              class="w-full h-12 pl-11 pr-3 bg-white/40 border border-transparent rounded-xl text-slate-700 text-base hover:bg-white/60 focus:bg-white/90 focus:ring-2 focus:ring-purple-200 transition-all outline-none shadow-sm font-medium">
+            <input type="number" id="batchSize" value="50" min="1" max="500" placeholder="Batch"
+              class="w-full h-full pl-11 pr-3 bg-white/50 border border-transparent rounded-xl text-slate-700 text-sm hover:bg-white/80 focus:bg-white/95 focus:ring-2 focus:ring-purple-200 transition-all outline-none shadow-sm font-medium backdrop-blur-sm">
           </div>
         </div>
 
         <!-- API Key -->
         <div class="md:col-span-10 2xl:col-span-11">
-          <div class="relative group h-full">
+          <label class="text-[11px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 ml-1 block">API Key</label>
+          <div class="relative group h-12">
             <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-              <i data-lucide="key" class="w-5 h-5 text-slate-400 transition-colors group-focus-within:text-purple-500"></i>
+              <i data-lucide="key" class="w-4 h-4 text-slate-400 transition-colors group-focus-within:text-purple-500"></i>
             </div>
-            <!-- 高度调回 h-12 -->
             <input type="password" id="userApiKey" placeholder="在此输入您的 API Key (sk-...)" 
-              class="w-full h-12 pl-11 pr-4 bg-white/40 border border-transparent rounded-xl text-slate-700 text-base hover:bg-white/60 focus:bg-white/90 focus:ring-2 focus:ring-purple-200 transition-all outline-none shadow-sm font-mono tracking-wide">
+              class="w-full h-full pl-11 pr-4 bg-white/50 border border-transparent rounded-xl text-slate-700 text-sm hover:bg-white/80 focus:bg-white/95 focus:ring-2 focus:ring-purple-200 transition-all outline-none shadow-sm font-mono tracking-wide backdrop-blur-sm">
           </div>
         </div>
       </div>
       
-      <!-- 输入源文本 (稍微增高 min-h) -->
-      <div class="mb-6 relative group">
-        <div class="absolute top-3 right-3 pointer-events-none z-10">
-            <span class="text-[10px] text-slate-400 font-bold bg-white/50 px-2 py-1 rounded-lg border border-white/30">SOURCE TEXT</span>
+      <!-- 输入源文本 -->
+      <div class="mb-6 relative group z-10">
+        <div class="flex justify-between items-center mb-1.5 ml-1">
+            <label class="text-[11px] font-bold text-slate-500 uppercase tracking-wider">源文本 (每行一个)</label>
         </div>
         <textarea id="sourceText" placeholder="输入待翻译词汇 (每行一个)&#10;例如：&#10;AI Stem Splitter&#10;Free Key and BPM Finder"
-            class="w-full p-5 min-h-[160px] bg-white/40 border border-transparent rounded-2xl text-slate-700 placeholder-slate-400 hover:bg-white/60 focus:bg-white/80 focus:border-purple-200 focus:ring-4 focus:ring-purple-100/50 transition-all outline-none shadow-sm resize-y font-sans text-sm leading-relaxed backdrop-blur-sm"></textarea>
+            class="w-full p-5 min-h-[180px] bg-white/50 border border-transparent rounded-2xl text-slate-700 placeholder-slate-400 hover:bg-white/70 focus:bg-white/95 focus:border-purple-200 focus:ring-4 focus:ring-purple-100/50 transition-all outline-none shadow-sm resize-y font-sans text-sm leading-relaxed backdrop-blur-sm"></textarea>
       </div>
 
-      <!-- 辅助功能区 (间距 gap-6) -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      <!-- 辅助功能区 (预设与提示词) -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8 relative z-10">
         <!-- 左侧：示例 -->
-        <div class="bg-white/30 rounded-2xl p-4 border border-white/40 shadow-sm backdrop-blur-md ring-1 ring-white/20 flex flex-col transition-all hover:bg-white/40">
+        <div class="bg-white/40 rounded-2xl p-5 border border-white/50 shadow-sm backdrop-blur-md hover:bg-white/60 transition-all group">
           <div class="flex justify-between items-center mb-3">
             <label class="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
               <i data-lucide="sparkles" class="w-3.5 h-3.5 text-yellow-500"></i> 示例 (Few-Shot)
             </label>
             <div class="flex gap-2">
-                <select id="examplePreset" class="text-xs bg-white/50 border-none rounded-lg px-2.5 py-1 text-slate-700 shadow-sm cursor-pointer hover:bg-white/80 focus:ring-1 focus:ring-purple-200 outline-none transition-colors font-medium">
-                  <option value="">加载预设...</option>
+                <select id="examplePreset" class="text-[11px] bg-white/60 border-none rounded-lg px-2.5 py-1 text-slate-700 shadow-sm cursor-pointer hover:bg-white/90 focus:ring-1 focus:ring-purple-200 outline-none transition-colors font-medium">
+                  <option value="">📋 加载预设...</option>
                   <option value="music">🎵 音乐场景</option>
                   <option value="coloring">🎨 填色场景</option>
                 </select>
-                <button id="previewExampleBtn" class="text-xs bg-white/50 px-3 py-1 rounded-lg text-slate-600 hover:text-purple-600 hover:bg-white transition-all border border-transparent hover:border-purple-100 font-medium shadow-sm">
+                <button id="previewExampleBtn" class="text-[11px] bg-white/60 px-3 py-1 rounded-lg text-slate-600 hover:text-purple-600 hover:bg-white transition-all border border-transparent hover:border-purple-100 font-medium shadow-sm">
                     预览表格
                 </button>
             </div>
           </div>
           <textarea id="bestExamples" placeholder="示例格式：&#10;AI Stem Splitter => AI 音轨分离器"
-            class="w-full p-4 h-24 bg-white/40 border border-transparent rounded-xl text-slate-700 placeholder-slate-400 focus:bg-white/80 focus:ring-2 focus:ring-purple-100/50 transition-all outline-none text-xs resize-none hover:bg-white/60"></textarea>
+            class="w-full p-4 h-32 bg-white/50 border border-transparent rounded-xl text-slate-700 placeholder-slate-400 focus:bg-white/90 focus:ring-2 focus:ring-purple-100/50 transition-all outline-none text-xs resize-none hover:bg-white/70"></textarea>
         </div>
 
         <!-- 右侧：提示词 -->
-        <div class="bg-white/30 rounded-2xl p-4 border border-white/40 shadow-sm backdrop-blur-md ring-1 ring-white/20 flex flex-col transition-all hover:bg-white/40">
+        <div class="bg-white/40 rounded-2xl p-5 border border-white/50 shadow-sm backdrop-blur-md hover:bg-white/60 transition-all group">
           <div class="flex justify-between items-center mb-3">
              <label class="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
-              <i data-lucide="message-square-dashed" class="w-3.5 h-3.5 text-blue-500"></i> 系统提示词 (System Prompt)
+              <i data-lucide="message-square-dashed" class="w-3.5 h-3.5 text-blue-500"></i> 系统提示词
             </label>
-            <select id="presetPrompt" class="text-xs bg-white/50 border-none rounded-lg px-2.5 py-1 text-slate-700 shadow-sm cursor-pointer hover:bg-white/80 focus:ring-1 focus:ring-purple-200 outline-none transition-colors font-medium">
-              <option value="">加载预设...</option>
+            <select id="presetPrompt" class="text-[11px] bg-white/60 border-none rounded-lg px-2.5 py-1 text-slate-700 shadow-sm cursor-pointer hover:bg-white/90 focus:ring-1 focus:ring-purple-200 outline-none transition-colors font-medium">
+              <option value="">🤖 加载预设...</option>
               <option value="music">🎵 音乐风格</option>
               <option value="coloring">🎨 填色风格</option>
             </select>
           </div>
           <textarea id="customPrompt" placeholder="例如：请保持专业语气，遇到专有名词保留英文..."
-            class="w-full p-4 h-24 bg-white/40 border border-transparent rounded-xl text-slate-700 placeholder-slate-400 focus:bg-white/80 focus:ring-2 focus:ring-purple-100/50 transition-all outline-none text-xs resize-none hover:bg-white/60"></textarea>
+            class="w-full p-4 h-32 bg-white/50 border border-transparent rounded-xl text-slate-700 placeholder-slate-400 focus:bg-white/90 focus:ring-2 focus:ring-purple-100/50 transition-all outline-none text-xs resize-none hover:bg-white/70"></textarea>
         </div>
       </div>
 
-      <!-- 底部工具栏 -->
-      <div class="flex flex-col lg:flex-row items-end lg:items-center gap-6 border-t border-white/30 pt-6">
+      <!-- 底部工具栏：拖拽 + 按钮 -->
+      <div class="flex flex-col lg:flex-row items-end lg:items-center gap-6 border-t border-white/30 pt-6 relative z-10">
         
-        <!-- 拖拽排序 -->
+        <!-- 拖拽排序 (亚克力胶囊风格) -->
         <div class="flex-1 w-full">
-            <div class="text-[11px] font-bold text-slate-400 uppercase mb-3 ml-1 tracking-wider">输出列顺序 (拖拽调整)</div>
+            <div class="text-[11px] font-bold text-slate-400 uppercase mb-3 ml-1 tracking-wider flex items-center gap-2">
+                <i data-lucide="arrow-left-right" class="w-3 h-3"></i> 输出列顺序 (拖拽调整)
+            </div>
             <ul id="headerList" class="flex flex-wrap gap-2.5">
-              <li draggable="true" data-code="zh" class="cursor-grab active:cursor-grabbing bg-white/60 text-slate-700 px-3.5 py-2 rounded-lg border border-white/50 shadow-sm text-xs font-bold hover:bg-white hover:border-purple-200 hover:text-purple-600 hover:shadow-md hover:-translate-y-0.5 transition-all select-none flex items-center gap-1.5">
-                <span class="w-1.5 h-1.5 rounded-full bg-red-400"></span> zh
+              <!-- zh -->
+              <li draggable="true" data-code="zh" class="cursor-grab active:cursor-grabbing bg-white/60 text-slate-700 px-3.5 py-2 rounded-lg border border-white/50 shadow-sm text-xs font-bold hover:bg-white hover:border-purple-200 hover:text-purple-600 hover:shadow-md hover:-translate-y-0.5 transition-all select-none flex items-center gap-1.5 backdrop-blur-sm">
+                <span class="w-1.5 h-1.5 rounded-full bg-red-400 shadow-[0_0_5px_rgba(248,113,113,0.6)]"></span> zh
               </li>
-              <li draggable="true" data-code="ja" class="cursor-grab active:cursor-grabbing bg-white/60 text-slate-700 px-3.5 py-2 rounded-lg border border-white/50 shadow-sm text-xs font-bold hover:bg-white hover:border-purple-200 hover:text-purple-600 hover:shadow-md hover:-translate-y-0.5 transition-all select-none flex items-center gap-1.5">
-                <span class="w-1.5 h-1.5 rounded-full bg-pink-400"></span> ja
+              <!-- ja -->
+              <li draggable="true" data-code="ja" class="cursor-grab active:cursor-grabbing bg-white/60 text-slate-700 px-3.5 py-2 rounded-lg border border-white/50 shadow-sm text-xs font-bold hover:bg-white hover:border-purple-200 hover:text-purple-600 hover:shadow-md hover:-translate-y-0.5 transition-all select-none flex items-center gap-1.5 backdrop-blur-sm">
+                <span class="w-1.5 h-1.5 rounded-full bg-pink-400 shadow-[0_0_5px_rgba(244,114,182,0.6)]"></span> ja
               </li>
-              <li draggable="true" data-code="de" class="cursor-grab active:cursor-grabbing bg-white/60 text-slate-700 px-3.5 py-2 rounded-lg border border-white/50 shadow-sm text-xs font-bold hover:bg-white hover:border-purple-200 hover:text-purple-600 hover:shadow-md hover:-translate-y-0.5 transition-all select-none flex items-center gap-1.5">
-                <span class="w-1.5 h-1.5 rounded-full bg-yellow-400"></span> de
+              <!-- de -->
+              <li draggable="true" data-code="de" class="cursor-grab active:cursor-grabbing bg-white/60 text-slate-700 px-3.5 py-2 rounded-lg border border-white/50 shadow-sm text-xs font-bold hover:bg-white hover:border-purple-200 hover:text-purple-600 hover:shadow-md hover:-translate-y-0.5 transition-all select-none flex items-center gap-1.5 backdrop-blur-sm">
+                <span class="w-1.5 h-1.5 rounded-full bg-yellow-400 shadow-[0_0_5px_rgba(250,204,21,0.6)]"></span> de
               </li>
-              <li draggable="true" data-code="pt" class="cursor-grab active:cursor-grabbing bg-white/60 text-slate-700 px-3.5 py-2 rounded-lg border border-white/50 shadow-sm text-xs font-bold hover:bg-white hover:border-purple-200 hover:text-purple-600 hover:shadow-md hover:-translate-y-0.5 transition-all select-none flex items-center gap-1.5">
-                <span class="w-1.5 h-1.5 rounded-full bg-green-400"></span> pt
+              <!-- pt -->
+              <li draggable="true" data-code="pt" class="cursor-grab active:cursor-grabbing bg-white/60 text-slate-700 px-3.5 py-2 rounded-lg border border-white/50 shadow-sm text-xs font-bold hover:bg-white hover:border-purple-200 hover:text-purple-600 hover:shadow-md hover:-translate-y-0.5 transition-all select-none flex items-center gap-1.5 backdrop-blur-sm">
+                <span class="w-1.5 h-1.5 rounded-full bg-green-400 shadow-[0_0_5px_rgba(74,222,128,0.6)]"></span> pt
               </li>
-              <li draggable="true" data-code="es" class="cursor-grab active:cursor-grabbing bg-white/60 text-slate-700 px-3.5 py-2 rounded-lg border border-white/50 shadow-sm text-xs font-bold hover:bg-white hover:border-purple-200 hover:text-purple-600 hover:shadow-md hover:-translate-y-0.5 transition-all select-none flex items-center gap-1.5">
-                <span class="w-1.5 h-1.5 rounded-full bg-orange-400"></span> es
+              <!-- es -->
+              <li draggable="true" data-code="es" class="cursor-grab active:cursor-grabbing bg-white/60 text-slate-700 px-3.5 py-2 rounded-lg border border-white/50 shadow-sm text-xs font-bold hover:bg-white hover:border-purple-200 hover:text-purple-600 hover:shadow-md hover:-translate-y-0.5 transition-all select-none flex items-center gap-1.5 backdrop-blur-sm">
+                <span class="w-1.5 h-1.5 rounded-full bg-orange-400 shadow-[0_0_5px_rgba(251,146,60,0.6)]"></span> es
               </li>
-              <li draggable="true" data-code="fr" class="cursor-grab active:cursor-grabbing bg-white/60 text-slate-700 px-3.5 py-2 rounded-lg border border-white/50 shadow-sm text-xs font-bold hover:bg-white hover:border-purple-200 hover:text-purple-600 hover:shadow-md hover:-translate-y-0.5 transition-all select-none flex items-center gap-1.5">
-                <span class="w-1.5 h-1.5 rounded-full bg-blue-400"></span> fr
+              <!-- fr -->
+              <li draggable="true" data-code="fr" class="cursor-grab active:cursor-grabbing bg-white/60 text-slate-700 px-3.5 py-2 rounded-lg border border-white/50 shadow-sm text-xs font-bold hover:bg-white hover:border-purple-200 hover:text-purple-600 hover:shadow-md hover:-translate-y-0.5 transition-all select-none flex items-center gap-1.5 backdrop-blur-sm">
+                <span class="w-1.5 h-1.5 rounded-full bg-blue-400 shadow-[0_0_5px_rgba(96,165,250,0.6)]"></span> fr
               </li>
-              <li draggable="true" data-code="ko" class="cursor-grab active:cursor-grabbing bg-white/60 text-slate-700 px-3.5 py-2 rounded-lg border border-white/50 shadow-sm text-xs font-bold hover:bg-white hover:border-purple-200 hover:text-purple-600 hover:shadow-md hover:-translate-y-0.5 transition-all select-none flex items-center gap-1.5">
-                <span class="w-1.5 h-1.5 rounded-full bg-teal-400"></span> ko
+              <!-- ko -->
+              <li draggable="true" data-code="ko" class="cursor-grab active:cursor-grabbing bg-white/60 text-slate-700 px-3.5 py-2 rounded-lg border border-white/50 shadow-sm text-xs font-bold hover:bg-white hover:border-purple-200 hover:text-purple-600 hover:shadow-md hover:-translate-y-0.5 transition-all select-none flex items-center gap-1.5 backdrop-blur-sm">
+                <span class="w-1.5 h-1.5 rounded-full bg-teal-400 shadow-[0_0_5px_rgba(45,212,191,0.6)]"></span> ko
               </li>
-              <li draggable="true" data-code="tw" class="cursor-grab active:cursor-grabbing bg-white/60 text-slate-700 px-3.5 py-2 rounded-lg border border-white/50 shadow-sm text-xs font-bold hover:bg-white hover:border-purple-200 hover:text-purple-600 hover:shadow-md hover:-translate-y-0.5 transition-all select-none flex items-center gap-1.5">
-                 <span class="w-1.5 h-1.5 rounded-full bg-red-300"></span> tw
+              <!-- tw -->
+              <li draggable="true" data-code="tw" class="cursor-grab active:cursor-grabbing bg-white/60 text-slate-700 px-3.5 py-2 rounded-lg border border-white/50 shadow-sm text-xs font-bold hover:bg-white hover:border-purple-200 hover:text-purple-600 hover:shadow-md hover:-translate-y-0.5 transition-all select-none flex items-center gap-1.5 backdrop-blur-sm">
+                 <span class="w-1.5 h-1.5 rounded-full bg-red-300 shadow-[0_0_5px_rgba(252,165,165,0.6)]"></span> tw
               </li>
-              <li draggable="true" data-code="vi" class="cursor-grab active:cursor-grabbing bg-white/60 text-slate-700 px-3.5 py-2 rounded-lg border border-white/50 shadow-sm text-xs font-bold hover:bg-white hover:border-purple-200 hover:text-purple-600 hover:shadow-md hover:-translate-y-0.5 transition-all select-none flex items-center gap-1.5">
-                 <span class="w-1.5 h-1.5 rounded-full bg-red-600"></span> vi
+              <!-- vi -->
+              <li draggable="true" data-code="vi" class="cursor-grab active:cursor-grabbing bg-white/60 text-slate-700 px-3.5 py-2 rounded-lg border border-white/50 shadow-sm text-xs font-bold hover:bg-white hover:border-purple-200 hover:text-purple-600 hover:shadow-md hover:-translate-y-0.5 transition-all select-none flex items-center gap-1.5 backdrop-blur-sm">
+                 <span class="w-1.5 h-1.5 rounded-full bg-red-600 shadow-[0_0_5px_rgba(220,38,38,0.6)]"></span> vi
               </li>
             </ul>
         </div>
 
-        <!-- 按钮组 (高度调回 h-12) -->
+        <!-- 按钮组 -->
         <div class="flex gap-3 w-full lg:w-auto mt-2 lg:mt-0">
-          <button id="copyBtn" class="flex-1 lg:flex-none h-12 px-6 rounded-xl bg-white/60 text-purple-700 font-semibold border border-purple-100 shadow-sm hover:bg-white/80 hover:shadow-md hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 text-sm group">
+          <button id="copyBtn" class="flex-1 lg:flex-none h-12 px-6 rounded-xl bg-white/60 text-purple-700 font-semibold border border-purple-100 shadow-sm hover:bg-white/80 hover:shadow-md hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 text-sm group backdrop-blur-sm">
             <i data-lucide="clipboard-check" class="w-4.5 h-4.5 group-hover:scale-110 transition-transform"></i> 复制 TSV
           </button>
-          <button id="dlBtn" class="flex-1 lg:flex-none h-12 px-6 rounded-xl bg-white/60 text-slate-700 font-semibold border border-slate-100 shadow-sm hover:bg-white/80 hover:shadow-md hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 text-sm group">
+          <button id="dlBtn" class="flex-1 lg:flex-none h-12 px-6 rounded-xl bg-white/60 text-slate-700 font-semibold border border-slate-100 shadow-sm hover:bg-white/80 hover:shadow-md hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2 text-sm group backdrop-blur-sm">
             <i data-lucide="download" class="w-4.5 h-4.5 group-hover:scale-110 transition-transform"></i> 下载
           </button>
           <button id="runBtn" class="flex-[2] lg:flex-none h-12 px-10 rounded-xl bg-slate-800/90 text-white font-bold shadow-lg shadow-slate-400/30 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2.5 text-sm backdrop-blur-md hover:bg-slate-900">
@@ -194,15 +226,15 @@
       </div>
 
       <!-- 移动端可见的状态条 -->
-      <div id="statusMobile" class="md:hidden mt-5 p-3 rounded-xl bg-white/40 border border-white/40 text-slate-600 text-xs font-medium flex items-center gap-2 backdrop-blur-md shadow-sm">
+      <div id="statusMobile" class="md:hidden mt-5 p-3 rounded-xl bg-white/50 border border-white/40 text-slate-600 text-xs font-medium flex items-center gap-2 backdrop-blur-md shadow-sm">
         <span class="w-2 h-2 rounded-full bg-slate-400"></span>
         待机中
       </div>
 
     </div>
 
-    <!-- 结果展示区 -->
-    <div class="result-section mt-6 bg-white/30 backdrop-blur-2xl rounded-[32px] border border-white/40 shadow-[0_8px_30px_rgba(0,0,0,0.04)] p-6 md:p-10 relative hidden ring-1 ring-white/30 transition-all" id="resultContainer">
+    <!-- 结果展示区 (默认隐藏) -->
+    <div class="result-section mt-6 bg-white/40 backdrop-blur-2xl rounded-[32px] border border-white/60 shadow-[0_8px_30px_rgba(0,0,0,0.04)] p-6 md:p-10 relative hidden ring-1 ring-white/50 transition-all" id="resultContainer">
       <h2 class="text-xl font-bold text-slate-800 mb-5 flex items-center gap-2.5">
         <div class="p-2 bg-green-100/80 rounded-lg text-green-700 backdrop-blur-sm">
           <i data-lucide="table-2" class="w-5 h-5"></i>
@@ -210,15 +242,15 @@
         翻译结果
       </h2>
       
-      <div class="table-wrap overflow-x-auto rounded-2xl border border-white/40 shadow-sm bg-white/20 backdrop-blur-sm transition-all" id="tableWrap" style="display:none;">
+      <div class="table-wrap overflow-x-auto rounded-2xl border border-white/40 shadow-sm bg-white/30 backdrop-blur-sm transition-all" id="tableWrap" style="display:none;">
         <table id="resultTable" class="w-full text-left border-collapse min-w-[800px]">
-          <thead><tr class="bg-white/40 border-b border-white/30 text-xs uppercase text-slate-600 font-bold tracking-wider backdrop-blur-sm"></tr></thead>
+          <thead><tr class="bg-white/50 border-b border-white/30 text-xs uppercase text-slate-600 font-bold tracking-wider backdrop-blur-sm"></tr></thead>
           <tbody class="divide-y divide-white/30 text-sm text-slate-700"></tbody>
         </table>
       </div>
-      <div class="text-[11px] text-slate-500 mt-4 flex items-center gap-1.5 font-medium bg-white/30 inline-flex px-3 py-1 rounded-full border border-white/20">
+      <div class="text-[11px] text-slate-500 mt-4 flex items-center gap-1.5 font-medium bg-white/40 inline-flex px-3 py-1 rounded-full border border-white/30">
         <i data-lucide="info" class="w-3.5 h-3.5"></i>
-        注：空白单元格标红表示可能漏译。
+        注：空白单元格标红表示可能漏译；HTML 标签与占位符原样保留。
       </div>
     </div>
   </div>
@@ -229,7 +261,7 @@
     <span id="toastMsg">已复制</span>
   </div>
 
-  <!-- 示例预览模态框 -->
+  <!-- 示例预览模态框 (毛玻璃风格) -->
   <div id="examplePreviewModal" class="fixed inset-0 z-[1000] hidden items-center justify-center bg-slate-900/30 backdrop-blur-md p-4 transition-all">
    <div class="bg-white/80 backdrop-blur-2xl rounded-[32px] w-full max-w-5xl max-h-[85vh] flex flex-col shadow-2xl border border-white/50 ring-1 ring-white/40">
       <div class="flex justify-between items-center p-6 border-b border-white/30">
@@ -249,6 +281,7 @@
    </div>
   </div>
 
+<!-- 逻辑代码区 (功能完全保留) -->
 <script>
 // 初始化图标
 lucide.createIcons();
@@ -258,18 +291,16 @@ const sleep = (ms)=>new Promise(r=>setTimeout(r, ms));
 
 // 显示 Result Container
 const resultContainer = document.getElementById('resultContainer');
-// 状态栏：有两个，桌面端在右上角，移动端在底部
+// 状态栏
 const statusDesktop = document.getElementById("status");
 const statusMobile = document.getElementById("statusMobile");
 
 function updateStatus(html, className) {
   const innerContent = html;
-  // 更新桌面端
   if (statusDesktop) {
     statusDesktop.className = `hidden md:flex px-4 py-2 rounded-xl text-xs font-medium items-center gap-2.5 backdrop-blur-md shadow-sm border ${className}`;
     statusDesktop.innerHTML = innerContent;
   }
-  // 更新移动端
   if (statusMobile) {
     statusMobile.className = `md:hidden mt-5 p-3 rounded-xl text-xs font-medium flex items-center gap-2 backdrop-blur-md shadow-sm border ${className}`;
     statusMobile.innerHTML = innerContent;
@@ -304,6 +335,7 @@ if (_userKeyInput) {
   });
 }
 
+// 拖拽排序逻辑
 const list = document.getElementById('headerList');
 let dragItem = null;
 list.addEventListener('dragstart', e => {
@@ -362,14 +394,14 @@ function renderTable(rows, inputLineCount){
   let missingCount = 0;
   dataRows.forEach(cols => {
     const tr = document.createElement("tr");
-    tr.className = "hover:bg-purple-50/40 transition-colors group";
+    tr.className = "hover:bg-purple-50/30 transition-colors group";
     header.forEach((_, i) => {
       const td = document.createElement("td");
       const val = (cols[i] ?? "").trim();
       td.className = "px-6 py-4 border-b border-white/30 group-last:border-none align-top leading-relaxed text-slate-700";
       
       if (!val) { 
-        td.classList.add("bg-red-50/60", "text-red-500"); 
+        td.classList.add("bg-red-50/60", "text-red-600"); 
         missingCount++; 
       }
       td.innerHTML = sanitizeKeepBr(val);
@@ -466,6 +498,7 @@ el.dlBtn.addEventListener("click",()=>{
   a.href=url;a.download="translations.tsv";a.click();URL.revokeObjectURL(url);
 });
 
+// 预设填充逻辑
 const presetSelect = document.getElementById("presetPrompt");
 const customPromptArea = document.getElementById("customPrompt");
 
@@ -474,9 +507,13 @@ if (presetSelect && customPromptArea) {
     music: `此次任务是进行AI音乐SAAS网站的文案翻译，需要将与 AI 音乐创作、混音、母带、歌词或音频工具相关的文本翻译为目标语言，使其自然、本地化、符合音乐行业术语及 SEO 表达，适用于全球音乐生成平台、音频工具网站和多语言产品页面。\n\n规则：\n- 保留原文格式与排版，不增删内容。\n- JSON格式的数据要保留原有结构，不能影响开发，包括全部的[]{}，保留英文的逗号,英文的引号""，json中的key保留不翻译等等\n- 翻译需兼顾音乐制作、AI 创作与音频工程领域的专业准确性。\n- 产品名或品牌名保持原文（如 MusicCreator AI、Suno、OpenMusic）。\n- 缺少合适译词时可保留英文原文，但需符合目标语言语序。\n- 语言风格：\n- 专业、自然、面向创作者、制作人、艺术家及普通用户。\n- 用词应清晰、简洁，避免过度营销或机械直译。\n- 对于原英文中的连词符，需要在不同目标语言下结合句意，语境，调整好表达的语序\n- 在描述功能或流程时，应采用音乐人常用表达方式。\n- 若涉及 SEO 描述，优先使用行业中搜索量较高的自然说法。\n\n说明：\n- 保留所有音频参数、符号、占位符及 HTML 标签。\n- 翻译音乐功能术语时遵循专业标准，如 EQ、DAW、compressor、vocal、drum loop、BPM 等。\n- 若出现流派或风格词汇（如 lofi、phonk、EDM、jazz），保持原文拼写。\n- 保留音乐品牌与产品名，不进行翻译或改写。\n- 语气应符合音乐平台风格：创意、自由、鼓励表达、兼具专业度。`,
     coloring: `此次任务是将与填色页相关的提示词、描述或儿童友好型图像说明翻译为目标语言，使其自然、本地化、具视觉描述性，适用于全球填色页网站、图像生成模型及多语言商品页面。\n\n规则：\n保留原文的格式与排版，不增删内容。\n保留所有技术词汇（如 outline only、ratio 2:3、no shadow、black and white 等）。\n原始的视觉结构说明必须完整保留。\n人物、角色或 IP 名称使用各语言中最常用、官方或广为人知的名称，避免直译或音译。\n当目标语言中缺少对应术语时，可保留英文原文。\n\n语言风格：\n温和、有想象力、具视觉感。\n面向儿童、家长或创作者。\n若为 AI 图像提示，应简洁、清晰。\n避免生硬直译或机械表达。\n\n翻译流程：\n① 直译（Literal Translation）：逐字逐句翻译，保留结构、技术词、排版。\n② 评估与反思（Evaluation and Reflection）：简要说明直译中的问题，包括不自然表达、视觉语义是否准确、技术描述是否清晰。\n③ 本地化译文（Free Translation）：基于反思重新翻译，使语气自然、生动、文化契合，同时保持视觉与技术准确性。\n\n说明：\n保留角色名、文化名词、图像特征。\n若文本描述场景，应具画面感与故事性。\n对于知名角色（如 Spiderman、Elsa、Hello Kitty），使用当地常用或官方名称。\n若不确定，采用该语言中搜索量最高的版本，不可随意音译。`
   };
+  // 为了节省 token 略去部分文本，实际代码请保留原有的长文本
   presetSelect.addEventListener("change", () => {
+    // 这里使用了简化的逻辑，实际使用时你可以把上面很长的 presets 文本放回去
     const v = presetSelect.value;
-    if (v && presets[v]) customPromptArea.value = presets[v];
+    // 恢复你原始的长文本逻辑
+    if (v === 'music') customPromptArea.value = presets.music;
+    else if (v === 'coloring') customPromptArea.value = presets.coloring; 
     else customPromptArea.value = "";
   });
 }
@@ -485,61 +522,7 @@ const examplePreset = document.getElementById("examplePreset");
 const bestExamplesArea = document.getElementById("bestExamples");
 if (examplePreset && bestExamplesArea) {
     const examplePresets = {
-    music: `英语	zh	ja	de	pt	es	fr	ko	vi
-beats	伴奏	打ち込み 音楽	beats	batidas	ritmos	Beats	beats	nhịp điệu
-FREE	免费	無料	Kostenlos	Grátis	Gratis	Gratuit	무료	miễn phí
-karaoke	卡拉OK	カラオケアプリ無料	Karaoke	karaokê	karaoke	Karaoké	가라오케	hát karaoke
-Online	在线	オンライン	Online	Na rede	En línea	En Ligne	온라인	trực tuyến
-Lofi	低保真	Lofi	Lo-fi	Lofi	Lofi	Lofi	Lofi	Lofi
-AI Music Generator	AI音乐生成器	音楽生成 AI	KI Musik Generator	Gerador de Música IA	Generador de Música IA	IA Musique Gratuite	AI 노래 만들기	                                            
-AI Voice	AI声音	AI歌声	KI Stimme	Voz artificial	Voz de IA	IA Voix	AI 보이스	giọng AI
-soundtrack	原声音乐	サントラ	Soundtrack	Trilha Sonora	banda sonora	Bande Sonore	OST	nhạc phim
-AI Music	AI音乐	AI 音楽	KI Musik	Música IA	Música IA	IA Musique	AI 노래	AI hát
-BPM Tapper	BPM节奏点击器	BPMカウンター	BPM Messer	Tempo tapper	Calculadora de BPM	Détecteur De BPM	BPM 측정	tempo tap
-AI Lyrics Generator	AI歌词生成器	歌詞 作る サイト	KI-Textgenerator	Gerador de Letras IA	Generador de Letras IA	Générateur De Parole IA	랩 가사 쓰는 사이트	tạo lời bài hát AI
-remove vocals	去人声	ボーカル除去	Gesang entfernen	Removedor de vocal	Quitar Vocales		보컬리무버	tách giọng
-AI Vocal Remover	AI人声移除工具	ボーカル抽出	KI Vocal Remover	Removedor de Vocais 	Eliminador de Voz IA	Séparateur Voix Musique	보컬 리무버	tách giọng
-Effortlessly	轻松地/毫不费力	簡単に	Mühelos	Sem esforço	sin esfuerzo	Facilement	무료	dễ dàng
-Music Creator	音乐创作者	音楽作成	Musik Erstellen	Criador de Música	Creador de Música	Compositeur De Musique	작곡 프로그램	tạo nhạc
-AI Rap Generator	AI说唱生成器	AIラップ生成	KI Rap Generator	Gerador de rap de IA	Generador de rap	Générateur de rap IA	AI 랩 생성기	tạo nhạc rap AI
-AI Stem Splitter	AI音轨分离	音声分離	KI Stem Splitter	Divisor de hastes AI	Separador de Pistas IA	Séparateur De Piste Audio	음원 분리	tách nhạc và giọng
-Voice Cloning	声音克隆	AI ボイス	Klonen von Gesangsstimmen	clonar voz	Clonación de Voz	Clonage Voix IA	AI 목소리 만들기	tạo giọng nói AI
-MIDI files	MIDI文件	MIDIファイル	MIDI Dateien	Arquivos MIDI	archivos MIDI	Fichiers MIDI	미디 파일 	tệp MIDI
-Royalty Free	免版税	ロイヤリティフリー	Lizenzfreie	Sem Direitos Autorais	libre de derechos	Libre De Droits	저작권 없는	Không bản quyền
-AI Song Cover	AI翻唱	AI カバー	KI Song Cover	criar capas IA	Portada de la canción AI	Cover IA	AI 노래 커버	bài hát cover AI
-MIDI Editor	MIDI编辑器	MIDIエディタ	MIDI Editor	Editor MIDI	Editor MIDI	Éditeur MIDI	미디 에디터	trình chỉnh sửa MIDI
-MIDI converter	MIDI转换器	midi 変換	MIDI Konverter	Conversor de MIDI	convertidor MIDI	Convertisseur MIDI	미디 변환기	chuyển đổi MIDI
-AI Singing Voice Generator	AI歌声生成器	AI 歌わせる	KI Gesangsstimmen Generator	Gerador de Voz de Canto IA	Generador de voz de canto con IA	Générateur de Voix IA	AI 목소리 만들기	tạo giọng hát AI
-AI Song Cover Generator	AI歌曲翻唱生成器	AIカバー やり方	KI Song Cover Generator	Gerador de Covers de Músicas com IA	Generador de portadas de canciones con IA	Générateur De Cover IA	AI 노래 커버 만들기	tạo bài hát cover AI
-AI MIDI Generator	AI MIDI生成器	midi 変換	KI MIDI Generator	Gerador MIDI AI	Generador de MIDI con IA	Générateur MIDI IA	AI 미디 생성	tạo MIDI AI
-lyrics to song generator	歌词转歌曲生成器	歌詞 から 作曲	KI Songtext erstellen	letras para gerador de músicas	letras a cancion	Générateur De Musique Par Paroles	가사 음악 생성기	công cụ tạo nhạc từ lời bài hát AI
-AI Instrumental Generator	AI伴奏生成器	bgm 作る サイト	 KI Hintergrundmusik Generator	Gerador Instrumental de IA	Generador de Instrumentales con IA	Générateur D'instrumental IA	AI 악기 생성기	tạo nhạc không lời AI
-Text to Music	文本生成音乐	歌詞を入れるだけで作曲 サイト	Text zu Musik	Texto para Música	Texto a música	Texte En Musique	텍스트 투 음악	tạo nhạc từ văn bản AI
-copyright free	版权免费	著作権フリー	Lizenzfrei	Uso Livre	libre de derechos de autor	Musique Sans Droit D'auteur	저작권 없는	Không bản quyền
-AI Music Mastering	AI音乐母带处理	AIマスタリング	KI-Musik-Mastering	Masterização musical com IA	Masterización de Música con IA	Mastering IA	AI 마스터링	mastering AI
-Making AI Music	制作AI音乐	AI 音楽作成	KI-Musik erstellen	Fazendo música com IA	crear musica con ia	IA Musique	AI 음악 만들기	tạo nhạc
-Generate AI Music	生成AI音乐	AI 曲 作成	KI Musik Erstellen	Gerar Música com IA	crear musica con ia	Générateur De Musique IA	AI 노래 만들기	AI nhạc tạo
-Music Generation	音乐生成	ミュージックジェネレーション	Musikproduktion	Geração de Música	Creación de Música con IA	IA Creation Musique	음악 생성	làm nhạc
-AI Editing Tools	AI编辑工具	音楽編集アプリ		Ferramentas de edição de IA	Herramientas de Edición con IA	Editeur IA	AI 편집기	công cụ chỉnh sửa AI
-MUSIC CREATION TOOLS	音乐创作工具	音楽作成アプリ	MUSIKERSTELLUNGSTOOLS ENTDECKEN	FERRAMENTAS DE CRIAÇÃO MUSICAL	Herramientas de Creación Musical	Logiciel Musique	작곡 프로그램	phòng thu
-lyrics to song maker	歌词转歌曲制作工具	歌詞を入れるだけで作曲 サイト	Songtext zu Musik	letras para criador de músicas	letras a cancion	énérateur de chansons à partir de paroles	가사를 음악으로 변환	công cụ tạo nhạc từ lời bài hát AI
-Lyric To Music	歌词变音乐	歌詞 から 作曲	Songtext zu Musik	Letra para Música	Letra a Música	Paroles En Musique	가사 음악 변환	tạo nhạc từ lời bài hát AI
-Photo to Music	照片转音乐	写真に音楽をつける	Foto zu Musik	Foto para Música	Foto a Música	Photo En Musique	이미지 투 음악	tạo nhạc từ ảnh AI
-AI Text to Music Generator	AI文生曲	AI 作詞 作曲	KI Text zu Musik Generator	Gerador de Música IA a partir de Texto	Generador de Música IA a partir de Texto	IA Qui Chante Un Texte	AI 음악 만들기	tạo nhạc từ văn bản AI
-Audio Separation	音频分离	音声分離	Audiotrennung	Separação de Áudio	Separación de Audio	Séparateur Voix Musique	음원 분리	tách nhạc và giọng
-personal album	个人专辑	オリジナルアルバム	privates Album	álbum pessoal	álbum personal	Album Personnel	앨범	album cá nhân
-AI MUSIC PLATFORM	AI音乐平台	AI 音楽	KI Musikplattform	Plataforma de Música com IA	PLATAFORMA DE MÚSICA CON IA	Plateforme Musicale IA	AI 음악	nền tảng nhạc
-production-ready	可直接用于制作	即戦力	produktionsreif	pronto para produção	listas para la producción	Prêt À L'emploi	바로 사용 가능	Sẵn sàng để sử dụng
-make bgm	制作背景音乐	bgm 作る		criar fundo de musica	hacer bgm	Créer Une Musique De Fond	bgm 만들기	tạo nhạc nền
-AI song maker	AI歌曲制作器	AI作曲ツール	KI-Song-Maker	Criador de canções com IA	creador de canciones con IA	Créer De La Musique Avec L'IA	AI 노래만들기	tạo nhạc
-Slowed + Reverb	降速混响	スロー+リバーブ	Verlangsamt und Hall	Desacelerado + Reverb	Ralentizado + Reverb	Ralenti + Réverbération	느려짐 + 리버브	Chậm + Reverb
-Noise Generator	噪音生成器	ノイズジェネレーター	Rauschgenerator	Gerador de ruído	Generador de ruido	Générateur de bruit	노이즈 생성기	Trình tạo tiếng ồn
-Chord Progression	和弦走向	コード進行	Akkordfolge	Progressão de Acordes	Progresión de Acordes	Progression d'accords	코드 진행	Chuỗi hợp âm
-8-Bit	8位复古音色	8ビット	8 Bit	8 bits	8 bits	8 bits	8비트	8-bit
-AI Background Music Generator	AI背景音乐生成器	AI背景音楽ジェネレーター	KI Hintergrundmusik Generator	Gerador de Música de Fundo com IA	Generador de Música de Fondo con IA	Générateur de musique de fond IA	AI 배경 음악 생성기	Trình tạo nhạc nền AI
-Lofi Converter	Lofi转换器	ローファイコンバーター	Lo-Fi Konverter	Conversor Lofi	Convertidor Lofi	Convertisseur Lo-fi	로파이 변환기	Bộ chuyển đổi Lofi
-AI Music Maker	AI音乐制作器	AI 音楽作成	KI Musik Erstellen	Fazedor de Música IA	Crear Musica Con IA	Créer De La Musique Avec L'IA	AI 음악 만들기	Công Cụ Tạo Nhạc AI
-AI Music Video Generator	AI音乐视频生成器	AIミュージックビデオ生成	KI Musikvideo Generator	Gerador de Vídeos de Música IA	Generador de Videos Musicales IA	Générateur de Vidéos Musicales IA	AI 뮤직비디오 생성기	Trình tạo video ca nhạc AI`,
+    music: `英语	zh	ja	de	pt	es	fr	ko	vi\nbeats	伴奏	打ち込み 音楽	beats	batidas	ritmos	Beats	beats	nhịp điệu\nFREE	免费	無料	Kostenlos	Grátis	Gratis	Gratuit	무료	miễn phí\nkaraoke	卡拉OK	カラオケアプリ無料	Karaoke	karaokê	karaoke	Karaoké	가라오케	hát karaoke\nOnline	在线	オンライン	Online	Na rede	En línea	En Ligne	온라인	trực tuyến\nLofi	低保真	Lofi	Lo-fi	Lofi	Lofi	Lofi	Lofi	Lofi\nAI Music Generator	AI音乐生成器	音楽生成 AI	KI Musik Generator	Gerador de Música IA	Generador de Música IA	IA Musique Gratuite	AI 노래 만들기	\nAI Voice	AI声音	AI歌声	KI Stimme	Voz artificial	Voz de IA	IA Voix	AI 보이스	giọng AI\nsoundtrack	原声音乐	サントラ	Soundtrack	Trilha Sonora	banda sonora	Bande Sonore	OST	nhạc phim\nAI Music	AI音乐	AI 音楽	KI Musik	Música IA	Música IA	IA Musique	AI 노래	AI hát\nBPM Tapper	BPM节奏点击器	BPMカウンター	BPM Messer	Tempo tapper	Calculadora de BPM	Détecteur De BPM	BPM 측정	tempo tap\nAI Lyrics Generator	AI歌词生成器	歌詞 作る サイト	KI-Textgenerator	Gerador de Letras IA	Generador de Letras IA	Générateur De Parole IA	랩 가사 쓰는 사이트	tạo lời bài hát AI\nremove vocals	去人声	ボーカル除去	Gesang entfernen	Removedor de vocal	Quitar Vocales		보컬리무버	tách giọng\nAI Vocal Remover	AI人声移除工具	ボーカル抽出	KI Vocal Remover	Removedor de Vocais 	Eliminador de Voz IA	Séparateur Voix Musique	보컬 리무버	tách giọng\nEffortlessly	轻松地/毫不费力	簡単に	Mühelos	Sem esforço	sin esfuerzo	Facilement	무료	dễ dàng\nMusic Creator	音乐创作者	音楽作成	Musik Erstellen	Criador de Música	Creador de Música	Compositeur De Musique	작곡 프로그램	tạo nhạc\nAI Rap Generator	AI说唱生成器	AIラップ生成	KI Rap Generator	Gerador de rap de IA	Generador de rap	Générateur de rap IA	AI 랩 생성기	tạo nhạc rap AI\nAI Stem Splitter	AI音轨分离	音声分離	KI Stem Splitter	Divisor de hastes AI	Separador de Pistas IA	Séparateur De Piste Audio	음원 분리	tách nhạc và giọng\nVoice Cloning	声音克隆	AI ボイス	Klonen von Gesangsstimmen	clonar voz	Clonación de Voz	Clonage Voix IA	AI 목소리 만들기	tạo giọng nói AI\nMIDI files	MIDI文件	MIDIファイル	MIDI Dateien	Arquivos MIDI	archivos MIDI	Fichiers MIDI	미디 파일 	tệp MIDI\nRoyalty Free	免版税	ロイヤリティフリー	Lizenzfreie	Sem Direitos Autorais	libre de derechos	Libre De Droits	저작권 없는	Không bản quyền\nAI Song Cover	AI翻唱	AI カバー	KI Song Cover	criar capas IA	Portada de la canción AI	Cover IA	AI 노래 커버	bài hát cover AI\nMIDI Editor	MIDI编辑器	MIDIエディタ	MIDI Editor	Editor MIDI	Editor MIDI	Éditeur MIDI	미디 에디터	trình chỉnh sửa MIDI\nMIDI converter	MIDI转换器	midi 変換	MIDI Konverter	Conversor de MIDI	convertidor MIDI	Convertisseur MIDI	미디 변환기	chuyển đổi MIDI\nAI Singing Voice Generator	AI歌声生成器	AI 歌わせる	KI Gesangsstimmen Generator	Gerador de Voz de Canto IA	Generador de voz de canto con IA	Générateur de Voix IA	AI 목소리 만들기	tạo giọng hát AI\nAI Song Cover Generator	AI歌曲翻唱生成器	AIカバー やり方	KI Song Cover Generator	Gerador de Covers de Músicas com IA	Generador de portadas de canciones con IA	Générateur De Cover IA	AI 노래 커버 만들기	tạo bài hát cover AI\nAI MIDI Generator	AI MIDI生成器	midi 変換	KI MIDI Generator	Gerador MIDI AI	Generador de MIDI con IA	Générateur MIDI IA	AI 미디 생성	tạo MIDI AI\nlyrics to song generator	歌词转歌曲生成器	歌詞 から 作曲	KI Songtext erstellen	letras para gerador de músicas	letras a cancion	Générateur De Musique Par Paroles	가사 음악 생성기	công cụ tạo nhạc từ lời bài hát AI\nAI Instrumental Generator	AI伴奏生成器	bgm 作る サイト	 KI Hintergrundmusik Generator	Gerador Instrumental de IA	Generador de Instrumentales con IA	Générateur D'instrumental IA	AI 악기 생성기	tạo nhạc không lời AI\nText to Music	文本生成音乐	歌詞を入れるだけで作曲 サイト	Text zu Musik	Texto para Música	Texto a música	Texte En Musique	텍스트 투 음악	tạo nhạc từ văn bản AI\ncopyright free	版权免费	著作権フリー	Lizenzfrei	Uso Livre	libre de derechos de autor	Musique Sans Droit D'auteur	저작권 없는	Không bản quyền\nAI Music Mastering	AI音乐母带处理	AIマスタリング	KI-Musik-Mastering	Masterização musical com IA	Masterización de Música con IA	Mastering IA	AI 마스터링	mastering AI\nMaking AI Music	制作AI音乐	AI 音楽作成	KI-Musik erstellen	Fazendo música com IA	crear musica con ia	IA Musique	AI 음악 만들기	tạo nhạc\nGenerate AI Music	生成AI音乐	AI 曲 作成	KI Musik Erstellen	Gerar Música com IA	crear musica con ia	Générateur De Musique IA	AI 노래 만들기	AI nhạc tạo\nMusic Generation	音乐生成	ミュージックジェネレーション	Musikproduktion	Geração de Música	Creación de Música con IA	IA Creation Musique	음악 생성	làm nhạc\nAI Editing Tools	AI编辑工具	音楽編集アプリ		Ferramentas de edição de IA	Herramientas de Edición con IA	Editeur IA	AI 편집기	công cụ chỉnh sửa AI\nMUSIC CREATION TOOLS	音乐创作工具	音楽作成アプリ	MUSIKERSTELLUNGSTOOLS ENTDECKEN	FERRAMENTAS DE CRIAÇÃO MUSICAL	Herramientas de Creación Musical	Logiciel Musique	작곡 프로그램	phòng thu\nlyrics to song maker	歌词转歌曲制作工具	歌詞を入れるだけで作曲 サイト	Songtext zu Musik	letras para criador de músicas	letras a cancion	énérateur de chansons à partir de paroles	가사를 음악으로 변환	công cụ tạo nhạc từ lời bài hát AI\nLyric To Music	歌词变音乐	歌詞 から 作曲	Songtext zu Musik	Letra para Música	Letra a Música	Paroles En Musique	가사 음악 변환	tạo nhạc từ lời bài hát AI\nPhoto to Music	照片转音乐	写真に音楽をつける	Foto zu Musik	Foto para Música	Foto a Música	Photo En Musique	이미지 투 음악	tạo nhạc từ ảnh AI\nAI Text to Music Generator	AI文生曲	AI 作詞 作曲	KI Text zu Musik Generator	Gerador de Música IA a partir de Texto	Generador de Música IA a partir de Texto	IA Qui Chante Un Texte	AI 음악 만들기	tạo nhạc từ văn bản AI\nAudio Separation	音频分离	音声分離	Audiotrennung	Separação de Áudio	Separación de Audio	Séparateur Voix Musique	음원 분리	tách nhạc và giọng\npersonal album	个人专辑	オリジナルアルバム	privates Album	álbum pessoal	álbum personal	Album Personnel	앨범	album cá nhân\nAI MUSIC PLATFORM	AI音乐平台	AI 音楽	KI Musikplattform	Plataforma de Música com IA	PLATAFORMA DE MÚSICA CON IA	Plateforme Musicale IA	AI 음악	nền tảng nhạc\nproduction-ready	可直接用于制作	即戦力	produktionsreif	pronto para produção	listas para la producción	Prêt À L'emploi	바로 사용 가능	Sẵn sàng để sử dụng\nmake bgm	制作背景音乐	bgm 作る		criar fundo de musica	hacer bgm	Créer Une Musique De Fond	bgm 만들기	tạo nhạc nền\nAI song maker	AI歌曲制作器	AI作曲ツール	KI-Song-Maker	Criador de canções com IA	creador de canciones con IA	Créer De La Musique Avec L'IA	AI 노래만들기	tạo nhạc\nSlowed + Reverb	降速混响	スロー+リバーブ	Verlangsamt und Hall	Desacelerado + Reverb	Ralentizado + Reverb	Ralenti + Réverbération	느려짐 + 리버브	Chậm + Reverb\nNoise Generator	噪音生成器	ノイズジェネレーター	Rauschgenerator	Gerador de ruído	Generador de ruido	Générateur de bruit	노이즈 생성기	Trình tạo tiếng ồn\nChord Progression	和弦走向	コード進行	Akkordfolge	Progressão de Acordes	Progresión de Acordes	Progression d'accords	코드 진행	Chuỗi hợp âm\n8-Bit	8位复古音色	8ビット	8 Bit	8 bits	8 bits	8 bits	8비트	8-bit\nAI Background Music Generator	AI背景音乐生成器	AI背景音楽ジェネレーター	KI Hintergrundmusik Generator	Gerador de Música de Fundo com IA	Generador de Música de Fondo con IA	Générateur de musique de fond IA	AI 배경 음악 생성기	Trình tạo nhạc nền AI\nLofi Converter	Lofi转换器	ローファイコンバーター	Lo-Fi Konverter	Conversor Lofi	Convertidor Lofi	Convertisseur Lo-fi	로파이 변환기	Bộ chuyển đổi Lofi\nAI Music Maker	AI音乐制作器	AI 音楽作成	KI Musik Erstellen	Fazedor de Música IA	Crear Musica Con IA	Créer De La Musique Avec L'IA	AI 음악 만들기	Công Cụ Tạo Nhạc AI\nAI Music Video Generator	AI音乐视频生成器	AIミュージックビデオ生成	KI Musikvideo Generator	Gerador de Vídeos de Música IA	Generador de Videos Musicales IA	Générateur de Vidéos Musicales IA	AI 뮤직비디오 생성기	Trình tạo video ca nhạc AI`,
     coloring: `待补充`
   };
   examplePreset.addEventListener("change", () => {
@@ -623,5 +606,3 @@ if (tableBody) {
 </script>
 </body>
 </html>
-
-
