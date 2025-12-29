@@ -450,9 +450,16 @@ async function translateAndRender(){
           userApiKey:(document.getElementById("userApiKey")?.value||"").trim()
         })
       });
-      if(!res.ok) throw new Error("请求失败");
-      const data=await res.json();
-      if(data.error){throw new Error(data.error.message||"后端错误");}
+      const data = await safeParseResponse(res);
+
+    if (data?.error) {
+      throw new Error(
+        typeof data.error === "string"
+          ? data.error
+          : data.error.message || "后端返回 error"
+      );
+    }
+
       combinedTSV += (combinedTSV?"\n":"")+(data.table||"").trim();
       offset += BATCH_SIZE; await sleep(1500);
     }
@@ -597,9 +604,57 @@ if (tableBody) {
     }
   });
 }
+
+  async function safeParseResponse(res) {
+  const contentType = res.headers.get("content-type") || "";
+  const rawText = await res.text();
+
+  // 方便你在 DevTools 里看完整返回
+  console.group("API Raw Response");
+  console.log("Status:", res.status);
+  console.log("Content-Type:", contentType);
+  console.log(rawText);
+  console.groupEnd();
+
+  // HTTP 非 2xx
+  if (!res.ok) {
+    throw new Error(
+      `HTTP ${res.status}\n` +
+      rawText.slice(0, 500) // 防止超长
+    );
+  }
+
+  // JSON
+  if (contentType.includes("application/json")) {
+    try {
+      return JSON.parse(rawText);
+    } catch (e) {
+      throw new Error(
+        "JSON 解析失败，原始返回：\n" +
+        rawText.slice(0, 500)
+      );
+    }
+  }
+
+  // SSE / 纯文本
+  if (contentType.includes("text/event-stream")) {
+    throw new Error(
+      "API 返回的是流式输出（text/event-stream），当前前端不支持解析。\n" +
+      rawText.slice(0, 500)
+    );
+  }
+
+  // 其他未知类型
+  throw new Error(
+    "未知返回类型：\n" +
+    rawText.slice(0, 500)
+  );
+}
+
 </script>
 </body>
 </html>
+
 
 
 
